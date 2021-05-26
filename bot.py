@@ -23,28 +23,39 @@ while True:
         stats_laps_in_sec = stats_laps_in_sec + 1
         time.sleep(1)
         print(".", end =" ", flush=True)
-    print("")
+    print(" ", end =" ", flush=True)
 
     if stats_laps_in_sec > stats_interval: 
+        print("")
         show_ticker()
         show_pos()
         stats_laps_in_sec = 0
 
     trades = get_trades("Buy", last_buy_time)
-    for trade in trades:
-        price = trade['price'] + 1000 
-        qty = trade['orderQty'] + 1000
-        sell(price, qty)
-        if trade['timestamp'] > last_buy_time : 
-            last_buy_time = trade['timestamp'] + datetime.timedelta(nanoseconds = 1)
+    if trades != TypeError:
+        for trade in trades:
+            price = trade['price'] + 1000
+            if trade['orderQty'] >= 1000:
+                qty = trade['orderQty'] + 1000
+            else:
+                qty = trade['orderQty']
+            sell(price, qty)
+            if trade['timestamp'] > last_buy_time : 
+                #last_buy_time = trade['timestamp'] + datetime.timedelta(microseconds = 1)
+                last_buy_time = trade['timestamp'] + datetime.timedelta(seconds = 1)
 
     trades = get_trades("Sell", last_sell_time)
-    for trade in trades:
-        price = trade['price'] - 1000
-        qty = trade['orderQty'] - 1000
-        buy(price, qty)
-        if trade['timestamp'] > last_sell_time : 
-            last_sell_time = trade['timestamp'] + datetime.timedelta(nanoseconds = 1)
+    if trades != TypeError:
+        for trade in trades:
+            price = trade['price'] - 1000
+            if trade['orderQty'] >= 1000:
+                qty = trade['orderQty'] - 1000
+            else:
+                qty = trade['orderQty']
+            buy(price, qty)
+            if trade['timestamp'] > last_sell_time : 
+                #last_sell_time = trade['timestamp'] + datetime.timedelta(microseconds = 1)
+                last_sell_time = trade['timestamp'] + datetime.timedelta(seconds = 1)
 
 
 

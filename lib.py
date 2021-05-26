@@ -46,6 +46,7 @@ def ticker(log = False):
         traceback.print_exc(file=sys.stdout)
         print('-'*60)
         return TypeError
+        #sys.exit()
 
 #
 # position
@@ -75,6 +76,7 @@ def show_pos():
         traceback.print_exc(file=sys.stdout)
         print('-'*60)
         return TypeError
+        #sys.exit()
 
 #
 # order
@@ -91,7 +93,7 @@ def sell(price, orderQty = None):
     orderQty = 0 - abs(orderQty)
     return place_order(price, orderQty)
 def place_order(price, orderQty):
-    try: 
+    try:
         if orderQty == None:
             orderQty = int(price)
         result = client.Order.Order_new(symbol=symbol, ordType="Limit", orderQty=orderQty, price=price).result()[0]
@@ -109,6 +111,7 @@ def place_order(price, orderQty):
         traceback.print_exc(file=sys.stdout)
         print('-'*60)
         return TypeError
+        #sys.exit()
 
 def cancel_order(side, price):
     try: 
@@ -153,22 +156,25 @@ def get_trades(side, start_time, end_time = None):
         results = []
         trades = client.Execution.Execution_getTradeHistory(symbol=symbol, reverse=False, count = 1, startTime = start_time, endTime = end_time, filter=json.dumps({'ordStatus' : 'Filled', 'side' : side})).result()[0] # without entries of PartiallyFilled 
         if len(trades) > 0: 
+            print("")
             if side == "Sell":
                 print("\033[35m", end="")
             else:
                 print("\033[32m", end="")
             print("FILLED ORDER:")
-            print("{:>15s}{:>15s}{:>15s}{:>30s}{:>15s}\033[00m".format("SIDE", "PRICE", "QTY", "TIME", "STATUS"))
+            print("{:>15s}{:>15s}{:>15s}{:>30s}{:>15s}\033[00m".format("SIDE", "PRICE", "QTY", "TIME", "EXEC ID"))
             for trade in trades:
-                print("\033[96m{:>15s}{:>15.2f}{:>15.0f}{:>30s}{:>15s}\033[00m".format(trade['side'], trade['price'], trade['orderQty'], trade['timestamp'].strftime("%d/%m/%Y %H:%M:%S"), trade['ordStatus']))
+                print("\033[96m{:>15s}{:>15.2f}{:>15.0f}{:>30s}{:>45s}\033[00m".format(trade['side'], trade['price'], trade['orderQty'], trade['timestamp'].strftime("%d/%m/%Y %H:%M:%S"), trade['execID']))
                 results.append(trade)
         return results
     except:
+        print("")
         print("\033[91mUnexpected Error!!\033[00m")
         print('-'*60)
         traceback.print_exc(file=sys.stdout)
         print('-'*60)
         return TypeError
+        #sys.exit()
 
 #
 #
