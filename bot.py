@@ -43,8 +43,7 @@ while True:
                 qty = trade['orderQty']
             sell(price, qty)
             if trade['timestamp'] > last_buy_time : 
-                #last_buy_time = trade['timestamp'] + datetime.timedelta(microseconds = 1)
-                last_buy_time = trade['timestamp'] + datetime.timedelta(seconds = 1)
+                last_buy_time = trade['timestamp'] + datetime.timedelta(microseconds = 1000) # bitmex resolution 1ms
 
     trades = get_trades("Sell", last_sell_time)
     if trades != TypeError:
@@ -57,8 +56,7 @@ while True:
                 qty = trade['orderQty']
             buy(price, qty)
             if trade['timestamp'] > last_sell_time : 
-                #last_sell_time = trade['timestamp'] + datetime.timedelta(microseconds = 1)
-                last_sell_time = trade['timestamp'] + datetime.timedelta(seconds = 1)
+                last_sell_time = trade['timestamp'] + datetime.timedelta(microseconds = 1000) # bitmex resolution 1ms
 
 
 
