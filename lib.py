@@ -162,7 +162,7 @@ def get_trades(side, start_time, end_time = None):
             else:
                 print("\033[32m", end="")
             print("FILLED ORDER:")
-            print("{:>15s}{:>15s}{:>15s}{:>30s}{:>15s}\033[00m".format("SIDE", "PRICE", "QTY", "TIME", "EXEC ID"))
+            print("{:>15s}{:>15s}{:>15s}{:>30s}{:>45s}\033[00m".format("SIDE", "PRICE", "QTY", "TIME", "EXEC ID"))
             for trade in trades:
                 print("\033[96m{:>15s}{:>15.2f}{:>15.0f}{:>30s}{:>45s}\033[00m".format(trade['side'], trade['price'], trade['orderQty'], trade['timestamp'].strftime("%d/%m/%Y %H:%M:%S"), trade['execID']))
                 results.append(trade)

@@ -3,6 +3,7 @@
 import argparse
 from lib import *
 
+trade_gap = 500 # the price gap to move over Sell side and Buy side
 polling_interval = 10
 stats_interval = 60 * 10
 
@@ -34,9 +35,10 @@ while True:
     trades = get_trades("Buy", last_buy_time)
     if trades != TypeError:
         for trade in trades:
-            price = trade['price'] + 1000
+            price = trade['price'] + trade_gap
             if trade['orderQty'] >= 1000:
-                qty = trade['orderQty'] + 1000
+                qty_factor = trade['price'] / trade['orderQty']
+                qty = trade['orderQty'] + (trade_gap / qty_factor)
             else:
                 qty = trade['orderQty']
             sell(price, qty)
@@ -47,9 +49,10 @@ while True:
     trades = get_trades("Sell", last_sell_time)
     if trades != TypeError:
         for trade in trades:
-            price = trade['price'] - 1000
+            price = trade['price'] - trade_gap
             if trade['orderQty'] >= 1000:
-                qty = trade['orderQty'] - 1000
+                qty_factor = trade['price'] / trade['orderQty']
+                qty = trade['orderQty'] - (trade_gap / qty_factor) 
             else:
                 qty = trade['orderQty']
             buy(price, qty)
