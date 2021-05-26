@@ -3,7 +3,7 @@
 import argparse
 from lib import *
 
-trade_gap = 500 # the price gap to move over Sell side and Buy side
+trade_gap = 500 # the price gap to move over Sell side and Buy side 
 polling_interval = 10
 stats_interval = 60 * 10
 
