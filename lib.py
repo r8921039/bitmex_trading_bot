@@ -111,24 +111,50 @@ def place_order(price, orderQty):
         traceback.print_exc(file=sys.stdout)
         print('-'*60)
         return TypeError
-        #sys.exit()
 
-def cancel_order(side, price):
+def get_orders(side, price): 
     try: 
-        orders = client.Order.Order_getOrders(symbol=symbol, reverse=True, filter=json.dumps({'open' : 'true', 'side' : side, 'price' : price})).result()
-        #print(orders[0][0]['orderID'])
-        #print(orders[0][0]['side'])
-        #print(orders[0][0]['price'])
-        #print(orders[0][0]['orderQty']) # don't use this one for seraching, as
-        #print(orders[0][0]['ordStatus']) # New, Canceled
-        for order in orders[0]:
-            print(orders[0][0]['orderID'])
-            print(orders[0][0]['side'])
-            print(orders[0][0]['price'])
-            print(orders[0][0]['orderQty']) # don't use this one for seraching, as
-            print(orders[0][0]['ordStatus']) # New, Canceled
-            result = client.Order.Order_cancel(orderID=order['orderID']).result()
-            print(result)
+        orders = client.Order.Order_getOrders(symbol=symbol, reverse=False, filter=json.dumps({'open' : 'true', 'side' : side, 'price' : price})).result()[0]
+        if len(orders) > 0:
+            if side == 'Sell':
+                print("\033[35m", end="")
+            else:
+                print("\033[32m", end="")
+            print("FOUND ORDERS:")
+            print("{:>15s}{:>15s}{:>15s}{:>30s}{:>45s}\033[00m".format("SIDE", "PRICE", "QTY", "TIME", "ORDER ID"))
+            for order in orders:
+                print("\033[96m{:>15s}{:>15.2f}{:>15.0f}{:>30s}{:>45s}\033[00m".format(order['side'], order['price'], order['orderQty'], order['timestamp'].strftime("%d/%m/%Y %H:%M:%S"), order['orderID']))
+        return orders
+    except:
+        print("\033[91mUnexpected Error!!\033[00m")
+        print('-'*60)
+        traceback.print_exc(file=sys.stdout)
+        print('-'*60)
+        return TypeError
+
+def cancel_order(order):
+    try: 
+        if order['side'] == 'Sell':
+            print("\033[35m", end="")
+        else:
+            print("\033[32m", end="")
+        print("CANCEL ORDER:")
+        print("{:>15s}{:>15s}{:>15s}{:>30s}{:>45s}\033[00m".format("SIDE", "PRICE", "QTY", "TIME", "ORDER ID"))
+        result = client.Order.Order_cancel(orderID=order['orderID']).result()[0][0]
+        print("\033[96m{:>15s}{:>15.2f}{:>15.0f}{:>30s}{:>45s}\033[00m".format(result['side'], result['price'], result['orderQty'], result['timestamp'].strftime("%d/%m/%Y %H:%M:%S"), result['orderID']))
+        return result
+    except:
+        print("\033[91mUnexpected Error!!\033[00m")
+        print('-'*60)
+        traceback.print_exc(file=sys.stdout)
+        print('-'*60)
+        return TypeError
+
+def cancel_orders(orders):
+    try: 
+        if len(orders) > 0:
+            for order in orders:
+                cancel_order(order)
         return None
     except:
         print("\033[91mUnexpected Error!!\033[00m")
@@ -154,7 +180,7 @@ def cancel_all_orders():
 def get_trades(side, start_time, end_time = None):
     try:
         results = []
-        trades = client.Execution.Execution_getTradeHistory(symbol=symbol, reverse=False, count = 10, startTime = start_time, endTime = end_time, filter=json.dumps({'ordStatus' : 'Filled', 'side' : side})).result()[0] # without entries of PartiallyFilled 
+        trades = client.Execution.Execution_getTradeHistory(symbol=symbol, reverse=False, count = 30, startTime = start_time, endTime = end_time, filter=json.dumps({'ordStatus' : 'Filled', 'side' : side})).result()[0] # without entries of PartiallyFilled 
         if len(trades) > 0: 
             print("")
             if side == "Sell":

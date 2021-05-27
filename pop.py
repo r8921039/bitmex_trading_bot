@@ -29,8 +29,8 @@ while price < stop_price:
         sell(price, qty)
     else: 
         buy(price, qty)
-    price += price_gap
     time.sleep(1)
+    price += price_gap
 
 
 

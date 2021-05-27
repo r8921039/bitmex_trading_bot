@@ -3,8 +3,8 @@
 import argparse
 from lib import *
 
-trade_gap = 500 # the price gap to move over Sell side and Buy side 
-polling_interval = 10
+trade_gap = 100 # the price gap to move over Sell side and Buy side 
+polling_interval = 3
 stats_interval = 60 * 10
 
 now = pytz.utc.localize(datetime.datetime.utcnow())
