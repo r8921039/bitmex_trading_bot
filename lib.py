@@ -112,9 +112,21 @@ def place_order(price, orderQty):
         print('-'*60)
         return TypeError
 
-def get_orders(side, price): 
+def get_all_buy_orders():
+    get_orders("Buy")
+def get_all_sell_orders():
+    get_orders("Sell")
+def get_orders(side, price = None): # price = None: for all orders 
     try: 
-        orders = client.Order.Order_getOrders(symbol=symbol, reverse=False, filter=json.dumps({'open' : 'true', 'side' : side, 'price' : price})).result()[0]
+        if price == None: 
+            orders = client.Order.Order_getOrders(symbol=symbol, reverse=False, count=200, columns='side,price,orderQty,timestamp,orderID', filter=json.dumps({'open' : 'true', 'side' : side})).result()[0]
+            if side == "Buy":
+                orders = sorted(orders, key = lambda i: i['price'], reverse=True)
+            else:
+                orders = sorted(orders, key = lambda i: i['price'], reverse=True)
+        else: 
+            orders = client.Order.Order_getOrders(symbol=symbol, reverse=False, filter=json.dumps({'open' : 'true', 'side' : side, 'price' : price})).result()[0]
+
         if len(orders) > 0:
             if side == 'Sell':
                 print("\033[35m", end="")
