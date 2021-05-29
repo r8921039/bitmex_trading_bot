@@ -3,14 +3,14 @@
 import argparse
 from lib import *
 
-side = "Sell"
-#side = "Buy"
-start_price = 70000
-stop_price = 72000
-#start_price = 18000
-#stop_price = 20000
-old_price_gap = 100
-new_price_gap = 1000
+#side = "Sell"
+side = "Buy"
+#start_price = 42000
+#stop_price = 48000
+start_price = 32000
+stop_price = 34000
+old_price_gap = 1000
+new_price_gap = 100
 
 qty_divisor = old_price_gap / new_price_gap
 
@@ -44,6 +44,7 @@ while price < stop_price:
                         time.sleep(1)
                         new_price += new_price_gap
         price += old_price_gap
+        time.sleep(1)
 
     elif old_price_gap == 100 and new_price_gap == 1000: 
         print("")
@@ -63,6 +64,7 @@ while price < stop_price:
             buy(price, price)
         time.sleep(1)
         price += new_price_gap
+        time.sleep(1)
 
 
 
