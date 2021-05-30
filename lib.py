@@ -218,3 +218,65 @@ def get_trades(side, start_time, end_time = None):
 #
 #
 
+def create_last_buy_sell():
+    try:
+        with open('.last_buy_sell', 'r') as last_buy_sell_config:
+            print("")
+    except:
+        with open('.last_buy_sell', 'w') as last_buy_sell_config:
+            json_file = {'buy': '', 'sell': ''}
+            json.dump(json_file, last_buy_sell_config)
+    
+    if os.path.getsize('.last_buy_sell') == 0:
+        with open('.last_buy_sell', 'w') as last_buy_sell_config:
+            json_file = {'buy': '', 'sell': ''}
+            json.dump(json_file, last_buy_sell_config)
+
+def read_last_buy_sell(last_buy_time, last_sell_time):
+    with open('.last_buy_sell', 'r') as json_file:
+        last_buy_sell_config = json.load(json_file)
+
+    if last_buy_sell_config['buy'] != "":
+        last_buy_time = datetime.datetime( \
+        last_buy_sell_config['buy']['year'], \
+        last_buy_sell_config['buy']['month'], \
+        last_buy_sell_config['buy']['day'], \
+        last_buy_sell_config['buy']['hour'], \
+        last_buy_sell_config['buy']['minute'], \
+        last_buy_sell_config['buy']['second'], \
+        last_buy_sell_config['buy']['microsecond'], \
+        tzinfo=datetime.timezone.utc)
+
+    if last_buy_sell_config['sell'] != "":
+        last_sell_time = datetime.datetime( \
+        last_buy_sell_config['sell']['year'], \
+        last_buy_sell_config['sell']['month'], \
+        last_buy_sell_config['sell']['day'], \
+        last_buy_sell_config['sell']['hour'], \
+        last_buy_sell_config['sell']['minute'], \
+        last_buy_sell_config['sell']['second'], \
+        last_buy_sell_config['sell']['microsecond'], \
+        tzinfo=datetime.timezone.utc)
+
+    return last_buy_time, last_sell_time
+
+def write_last_buy_sell(last_buy_time, last_sell_time):
+    with open('.last_buy_sell', 'w') as last_buy_sell_config:
+        json_file = {'buy': { \
+            'year': last_buy_time.year, \
+            'month': last_buy_time.month, \
+            'day': last_buy_time.day, \
+            'hour': last_buy_time.hour, \
+            'minute': last_buy_time.minute, \
+            'second': last_buy_time.second, \
+            'microsecond': last_buy_time.microsecond \
+            }, 'sell': { \
+            'year': last_sell_time.year, \
+            'month': last_sell_time.month, \
+            'day': last_sell_time.day, \
+            'hour': last_sell_time.hour, \
+            'minute': last_sell_time.minute, \
+            'second': last_sell_time.second, \
+            'microsecond': last_sell_time.microsecond \
+        }}
+        json.dump(json_file, last_buy_sell_config)

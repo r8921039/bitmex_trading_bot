@@ -10,8 +10,9 @@ stats_interval = 60 * 3
 now = pytz.utc.localize(datetime.datetime.utcnow())
 #now = datetime.datetime(2021, 5, 25, 8, 0, 0, tzinfo=datetime.timezone.utc) # WARNING! for debug! can cause catastrophe 
 
-last_buy_time = now 
-last_sell_time = now 
+create_last_buy_sell()
+last_buy_time, last_sell_time = read_last_buy_sell(now, now) # overwrite with persisted data
+
 stats_laps_in_sec = 0
 
 os.system('clear')
@@ -42,8 +43,11 @@ while True:
             else:
                 qty = trade['orderQty']
             sell(price, qty)
+            # beep sound
+            print("\a")
             if trade['timestamp'] > last_buy_time : 
                 last_buy_time = trade['timestamp'] + datetime.timedelta(microseconds = 1000) # bitmex resolution 1ms
+                write_last_buy_sell(last_buy_time, last_sell_time)
 
     trades = get_trades("Sell", last_sell_time)
     if trades != TypeError:
@@ -55,10 +59,9 @@ while True:
             else:
                 qty = trade['orderQty']
             buy(price, qty)
+            # double beep sound
+            print("\a\a")
             if trade['timestamp'] > last_sell_time : 
                 last_sell_time = trade['timestamp'] + datetime.timedelta(microseconds = 1000) # bitmex resolution 1ms
-
-
-
-
+                write_last_buy_sell(last_buy_time, last_sell_time)
 
