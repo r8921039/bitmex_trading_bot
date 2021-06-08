@@ -11,8 +11,8 @@ if side == "Sell":
     start_price = 42000 # inclusive
     stop_price  = 45000 # exclusive
 elif side == "Buy":
-    start_price = 26000 # includsive
-    stop_price  = 29000 # exclusive
+    start_price = 25000 # includsive
+    stop_price  = 26000 # exclusive
 else:
     print("\033[91mError! side must be Buy/Sell\033[00m")
     sys.exit()
@@ -52,8 +52,10 @@ while price < stop_price:
                 print("")
                 if type(result) == dict:
                     new_price = price
-                    new_qty = new_price / qty_divisor
-                    new_qty = new_qty - (new_qty % 100) 
+                    # 2020-06-07 from now on, bitmex requires qty multiples of 100. thus, use price / qty_divisor instead 
+                    #new_qty = new_price / qty_divisor
+                    #new_qty = new_qty - (new_qty % 100) 
+                    new_qty = price / qty_divisor
                     for i in range(0, 10):
                         if side == "Sell":
                             sell(new_price, new_qty)
@@ -64,7 +66,7 @@ while price < stop_price:
         price += old_price_gap
         time.sleep(1)
 
-    # Conbine
+    # Combine
     elif old_price_gap == 100 and new_price_gap == 1000: 
         print("")
         print("")

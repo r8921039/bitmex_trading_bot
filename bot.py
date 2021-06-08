@@ -4,7 +4,7 @@ import argparse
 from lib import *
 
 trade_gap = 100 # the price gap to move over Sell side and Buy side 
-polling_interval = 10
+polling_interval = 3
 stats_interval = 60 * 3
 
 now = pytz.utc.localize(datetime.datetime.utcnow())
@@ -38,9 +38,13 @@ while True:
         for trade in trades:
             price = trade['price'] + trade_gap
             if trade['orderQty'] >= 1000:
-                qty_factor = trade['price'] / trade['orderQty']
-                qty = trade['orderQty'] + (trade_gap / qty_factor)
-                qty = qty - (qty % 100)
+                #print("orderQty:" + str(trade['orderQty']))
+                #qty_factor = trade['price'] / trade['orderQty']
+                #qty = trade['orderQty'] + (trade_gap / qty_factor)
+                #print("old qty:" + str(qty) + " qty % 100:" + str(qty % 100))
+                #qty = qty - (qty % 100)
+                #print("new qty:" + str(qty))
+                qty = trade['orderQty']
             else:
                 qty = trade['orderQty']
             sell(price, qty)
@@ -49,15 +53,20 @@ while True:
             if trade['timestamp'] > last_buy_time : 
                 last_buy_time = trade['timestamp'] + datetime.timedelta(microseconds = 1000) # bitmex resolution 1ms
                 write_last_buy_sell(last_buy_time, last_sell_time)
+            time.sleep(1)
 
     trades = get_trades("Sell", last_sell_time)
     if trades != TypeError:
         for trade in trades:
             price = trade['price'] - trade_gap
             if trade['orderQty'] >= 1000:
-                qty_factor = trade['price'] / trade['orderQty']
-                qty = trade['orderQty'] - (trade_gap / qty_factor) 
-                qty = qty - (qty % 100)
+                #print("orderQty:" + str(trade['orderQty']))
+                #qty_factor = trade['price'] / trade['orderQty']
+                #qty = trade['orderQty'] - (trade_gap / qty_factor) 
+                #print("old qty:" + str(qty) + " qty % 100:" + str(qty % 100))
+                #qty = qty - (qty % 100)
+                #print("new qty:" + str(qty))
+                qty = trade['orderQty'] 
             else:
                 qty = trade['orderQty']
             buy(price, qty)
@@ -66,4 +75,5 @@ while True:
             if trade['timestamp'] > last_sell_time : 
                 last_sell_time = trade['timestamp'] + datetime.timedelta(microseconds = 1000) # bitmex resolution 1ms
                 write_last_buy_sell(last_buy_time, last_sell_time)
+            time.sleep(1)
 
