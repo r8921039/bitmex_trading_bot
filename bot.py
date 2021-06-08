@@ -40,6 +40,7 @@ while True:
             if trade['orderQty'] >= 1000:
                 qty_factor = trade['price'] / trade['orderQty']
                 qty = trade['orderQty'] + (trade_gap / qty_factor)
+                qty = qty - (qty % 100)
             else:
                 qty = trade['orderQty']
             sell(price, qty)
@@ -56,6 +57,7 @@ while True:
             if trade['orderQty'] >= 1000:
                 qty_factor = trade['price'] / trade['orderQty']
                 qty = trade['orderQty'] - (trade_gap / qty_factor) 
+                qty = qty - (qty % 100)
             else:
                 qty = trade['orderQty']
             buy(price, qty)
