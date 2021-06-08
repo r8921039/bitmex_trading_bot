@@ -27,8 +27,6 @@ else:
     print("\033[91mError! action must be Breakdown/Combine\033[00m")
     sys.exit()
 
-qty_divisor = old_price_gap / new_price_gap
-
 now = pytz.utc.localize(datetime.datetime.utcnow())
 
 os.system('clear')
@@ -52,10 +50,8 @@ while price < stop_price:
                 print("")
                 if type(result) == dict:
                     new_price = price
-                    # 2020-06-07 from now on, bitmex requires qty multiples of 100. thus, use price / qty_divisor instead 
-                    #new_qty = new_price / qty_divisor
-                    #new_qty = new_qty - (new_qty % 100) 
-                    new_qty = price / qty_divisor
+                    # since 2021-06-07, bitmex requires qty multiples of 100
+                    new_qty = (price // 1000) * 100 
                     for i in range(0, 10):
                         if side == "Sell":
                             sell(new_price, new_qty)
