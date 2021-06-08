@@ -2,3 +2,4 @@
 .last_buy_sell
 __pycache__/
 out.log
+out_sh.log
