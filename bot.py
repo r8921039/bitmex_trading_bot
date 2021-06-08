@@ -37,16 +37,7 @@ while True:
     if trades != TypeError:
         for trade in trades:
             price = trade['price'] + trade_gap
-            if trade['orderQty'] >= 1000:
-                #print("orderQty:" + str(trade['orderQty']))
-                #qty_factor = trade['price'] / trade['orderQty']
-                #qty = trade['orderQty'] + (trade_gap / qty_factor)
-                #print("old qty:" + str(qty) + " qty % 100:" + str(qty % 100))
-                #qty = qty - (qty % 100)
-                #print("new qty:" + str(qty))
-                qty = trade['orderQty']
-            else:
-                qty = trade['orderQty']
+            qty = (price - (price % 100)) / 10
             sell(price, qty)
             # beep sound
             print("\a")
@@ -59,16 +50,7 @@ while True:
     if trades != TypeError:
         for trade in trades:
             price = trade['price'] - trade_gap
-            if trade['orderQty'] >= 1000:
-                #print("orderQty:" + str(trade['orderQty']))
-                #qty_factor = trade['price'] / trade['orderQty']
-                #qty = trade['orderQty'] - (trade_gap / qty_factor) 
-                #print("old qty:" + str(qty) + " qty % 100:" + str(qty % 100))
-                #qty = qty - (qty % 100)
-                #print("new qty:" + str(qty))
-                qty = trade['orderQty'] 
-            else:
-                qty = trade['orderQty']
+            qty = (trade['price'] - (trade['price'] % 100)) / 10
             buy(price, qty)
             # double beep sound
             print("\a\a")
