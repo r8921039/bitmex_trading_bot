@@ -51,12 +51,14 @@ while price < stop_price:
                 time.sleep(1)
                 print("")
                 if type(result) == dict:
-                    new_price = price 
+                    new_price = price
+                    new_qty = new_price / qty_divisor
+                    new_qty = new_qty - (new_qty % 100) 
                     for i in range(0, 10):
                         if side == "Sell":
-                            sell(new_price, new_price / qty_divisor)
+                            sell(new_price, new_qty)
                         else:
-                            buy(new_price, new_price / qty_divisor)
+                            buy(new_price, new_qty)
                         time.sleep(2)
                         new_price += new_price_gap
         price += old_price_gap
