@@ -192,7 +192,7 @@ def cancel_all_orders():
 def get_trades(side, start_time, end_time = None):
     try:
         results = []
-        trades = client.Execution.Execution_getTradeHistory(symbol=symbol, reverse=False, count = 1, startTime = start_time, endTime = end_time, filter=json.dumps({'ordStatus' : 'Filled', 'side' : side})).result()[0] # without entries of PartiallyFilled 
+        trades = client.Execution.Execution_getTradeHistory(symbol=symbol, reverse=False, count = 3, startTime = start_time, endTime = end_time, filter=json.dumps({'ordStatus' : 'Filled', 'side' : side})).result()[0] # without entries of PartiallyFilled 
         if len(trades) > 0: 
             print("")
             if side == "Sell":
