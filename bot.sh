@@ -22,7 +22,7 @@ stop() {
 	if [ ! -z "$res" ]
 	then
 		echo "stopping bot..." 
-		sudo xargs kill $res
+		sudo kill $res
 	fi
 
 	sleep 1
@@ -31,7 +31,7 @@ stop() {
 	if [ ! -z "$res" ]
 	then
 		echo "force stopping bot..." 
-		sudo xargs kill -9 $res
+		sudo kill -9 $res
 	fi
 
 	sleep 1
