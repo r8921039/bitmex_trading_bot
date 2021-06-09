@@ -37,9 +37,12 @@ while True:
     if trades != TypeError:
         for trade in trades:
             price = trade['price'] + trade_gap
-            qty = (price // 1000) * 100
+            if trade['price'] == trade['orderQty']:
+                qty = price    
+            else:
+                qty = (price // 1000) * 100
             sell(price, qty)
-            # beep sound
+            # price down: single beep
             print("\a")
             if trade['timestamp'] > last_buy_time : 
                 last_buy_time = trade['timestamp'] + datetime.timedelta(microseconds = 1000) # bitmex resolution 1ms
@@ -50,9 +53,12 @@ while True:
     if trades != TypeError:
         for trade in trades:
             price = trade['price'] - trade_gap
-            qty = (trade['price'] // 1000) * 100
+            if trade['price'] == trade['orderQty']:
+                qty = price
+            else:
+                qty = (trade['price'] // 1000) * 100
             buy(price, qty)
-            # double beep sound
+            # price up: double beep
             print("\a\a")
             if trade['timestamp'] > last_sell_time : 
                 last_sell_time = trade['timestamp'] + datetime.timedelta(microseconds = 1000) # bitmex resolution 1ms
