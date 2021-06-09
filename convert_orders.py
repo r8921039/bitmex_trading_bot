@@ -3,16 +3,16 @@
 import argparse
 from lib import *
 
-#side = "Sell"
-side = "Buy"
+side = "Sell"
+#side = "Buy"
 action = "Breakdown"
 #action = "Combine"
 if side == "Sell":
-    start_price = 42000 # inclusive
-    stop_price  = 45000 # exclusive
+    start_price = 36000 # inclusive
+    stop_price  = 39000 # exclusive
 elif side == "Buy":
-    start_price = 25000 # includsive
-    stop_price  = 26000 # exclusive
+    start_price = 23000 # includsive
+    stop_price  = 25000 # exclusive
 else:
     print("\033[91mError! side must be Buy/Sell\033[00m")
     sys.exit()
@@ -69,7 +69,7 @@ while price < stop_price:
         old_price = price
         for i in range(0, 10):
             orders = get_orders(side, old_price)
-            time.sleep(1)
+            time.sleep(2)
             cancel_orders(orders)
             time.sleep(2)
             old_price += old_price_gap
