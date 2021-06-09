@@ -13,7 +13,6 @@ start() {
     	echo "bot.py stopped"
 	else
     	echo "bot.py alreay running. skipping..."
-		exit 1
 	fi 
 }
 
@@ -42,7 +41,6 @@ stop() {
 		echo "bot stopped"
 	else 
 		echo "failed to stop bot"
-        exit 1
     fi 
 }
 
