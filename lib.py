@@ -28,15 +28,15 @@ verbose = False # debug
 # 
 
 def get_ticker(): 
-    ticker()
+    return ticker(False)
 def show_ticker():
-    ticker(True)
+    return ticker(True)
 def ticker(log = False):
     try: 
         result = client.Quote.Quote_get(symbol=symbol, reverse=True, count=1).result()[0][0]
         ticker = Decimal((result['bidPrice'] + result['askPrice']) / 2)
         timestamp = result['timestamp'].strftime("%d/%m/%Y %H:%M:%S")
-        if log :
+        if log:
             print("\033[36mTICKER:\033[00m")
             print("\033[96m{:>15.0f}{:>30s} (UTC)\033[00m".format(ticker, timestamp))
         return ticker 
@@ -112,30 +112,31 @@ def place_order(price, orderQty):
         print('-'*60)
         return TypeError
 
-def get_all_buy_orders():
-    get_orders("Buy")
-def get_all_sell_orders():
-    get_orders("Sell")
-def get_orders(side, price = None): # price = None: for all orders 
+def get_all_buy_orders(log = True, price_reverse = True):
+    return get_orders("Buy", log = log, price_reverse = price_reverse)
+def get_all_sell_orders(log = True, price_reverse = True):
+    return get_orders("Sell", log = log, price_reverse = price_reverse)
+def get_orders(side, price = None, log = True, price_reverse = True): # price = None: for all orders 
     try: 
         if price == None: 
             orders = client.Order.Order_getOrders(symbol=symbol, reverse=False, count=200, columns='side,price,orderQty,timestamp,orderID', filter=json.dumps({'open' : 'true', 'side' : side})).result()[0]
             if side == "Buy":
-                orders = sorted(orders, key = lambda i: i['price'], reverse=True)
+                orders = sorted(orders, key = lambda i: i['price'], reverse=price_reverse)
             else:
-                orders = sorted(orders, key = lambda i: i['price'], reverse=True)
+                orders = sorted(orders, key = lambda i: i['price'], reverse=price_reverse)
         else: 
             orders = client.Order.Order_getOrders(symbol=symbol, reverse=False, filter=json.dumps({'open' : 'true', 'side' : side, 'price' : price})).result()[0]
 
         if len(orders) > 0:
-            if side == 'Sell':
-                print("\033[35m", end="")
-            else:
-                print("\033[32m", end="")
-            print("FOUND ORDERS:")
-            print("{:>15s}{:>15s}{:>15s}{:>30s}{:>45s}\033[00m".format("SIDE", "PRICE", "QTY", "TIME", "ORDER ID"))
-            for order in orders:
-                print("\033[96m{:>15s}{:>15.2f}{:>15.0f}{:>30s}{:>45s}\033[00m".format(order['side'], order['price'], order['orderQty'], order['timestamp'].strftime("%d/%m/%Y %H:%M:%S"), order['orderID']))
+            if log == True:
+                if side == 'Sell':
+                    print("\033[35m", end="")
+                else:
+                    print("\033[32m", end="")
+                print("FOUND ORDERS:")
+                print("{:>15s}{:>15s}{:>15s}{:>30s}{:>45s}\033[00m".format("SIDE", "PRICE", "QTY", "TIME", "ORDER ID"))
+                for order in orders:
+                    print("\033[96m{:>15s}{:>15.2f}{:>15.0f}{:>30s}{:>45s}\033[00m".format(order['side'], order['price'], order['orderQty'], order['timestamp'].strftime("%d/%m/%Y %H:%M:%S"), order['orderID']))
         return orders
     except:
         print("\033[91mUnexpected Error!!\033[00m")
