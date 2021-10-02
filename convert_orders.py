@@ -3,13 +3,13 @@
 import argparse
 from lib import *
 
-#side = "Sell"
-side = "Buy"
-#action = "Breakdown"
-action = "Combine"
+side = "Sell"
+#side = "Buy"
+action = "Breakdown"
+#action = "Combine"
 if side == "Sell":
-    start_price = 52000 # inclusive
-    stop_price  = 54000 # exclusive
+    start_price = 54000 # inclusive
+    stop_price  = 56000 # exclusive
 elif side == "Buy":
     start_price = 38000 # includsive
     stop_price  = 40000 # exclusive
@@ -83,6 +83,7 @@ while price < stop_price:
         price += new_price_gap
         time.sleep(3)
 
+print("\a\a\a")
 
 
 
