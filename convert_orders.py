@@ -5,14 +5,14 @@ from lib import *
 
 #side = "Sell"
 side = "Buy"
-action = "Breakdown"
-#action = "Combine"
+#action = "Breakdown"
+action = "Combine"
 if side == "Sell":
-    start_price = 46000 # inclusive
-    stop_price  = 48000 # exclusive
+    start_price = 52000 # inclusive
+    stop_price  = 54000 # exclusive
 elif side == "Buy":
-    start_price = 30000 # includsive
-    stop_price  = 32000 # exclusive
+    start_price = 38000 # includsive
+    stop_price  = 40000 # exclusive
 else:
     print("\033[91mError! side must be Buy/Sell\033[00m")
     sys.exit()
@@ -57,10 +57,10 @@ while price < stop_price:
                             sell(new_price, new_qty)
                         else:
                             buy(new_price, new_qty)
-                        time.sleep(2)
+                        time.sleep(3)
                         new_price += new_price_gap
         price += old_price_gap
-        time.sleep(2)
+        time.sleep(3)
 
     # Combine
     elif old_price_gap == 100 and new_price_gap == 1000: 
@@ -79,9 +79,9 @@ while price < stop_price:
             sell(price, price)
         else:
             buy(price, price)
-        time.sleep(2)
+        time.sleep(3)
         price += new_price_gap
-        time.sleep(2)
+        time.sleep(3)
 
 
 
