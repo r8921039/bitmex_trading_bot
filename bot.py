@@ -37,10 +37,7 @@ while True:
     if trades != TypeError:
         for trade in trades:
             price = trade['price'] + trade_gap
-            if trade['price'] == trade['orderQty']:
-                qty = price    
-            else:
-                qty = (price // 1000) * 100
+            qty = trade['orderQty']
             sell(price, qty)
             # price down: single beep
             print("\a")
@@ -53,10 +50,7 @@ while True:
     if trades != TypeError:
         for trade in trades:
             price = trade['price'] - trade_gap
-            if trade['price'] == trade['orderQty']:
-                qty = price
-            else:
-                qty = (trade['price'] // 1000) * 100
+            qty = trade['orderQty']
             buy(price, qty)
             # price up: double beep
             print("\a\a")
