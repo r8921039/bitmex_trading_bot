@@ -21,41 +21,47 @@ print("\033[93m{:>15s}{:>30s} (UTC)\033[00m".format("BITMEX BOT", now.strftime("
 show_pos()
 
 while True:
-    for i in range(1, polling_interval):
-        stats_laps_in_sec = stats_laps_in_sec + 1
-        time.sleep(1)
-        print(".", end =" ", flush=True)
-    print(" ", end =" ", flush=True)
-
-    if stats_laps_in_sec > stats_interval: 
-        print("")
-        #show_ticker()
-        show_pos()
-        stats_laps_in_sec = 0
-
-    trades = get_trades("Buy", last_buy_time)
-    if trades != TypeError:
-        for trade in trades:
-            price = trade['price'] + trade_gap
-            qty = trade['orderQty']
-            sell(price, qty)
-            # price down: single beep
-            print("\a")
-            if trade['timestamp'] > last_buy_time : 
-                last_buy_time = trade['timestamp'] + datetime.timedelta(microseconds = 1000) # bitmex resolution 1ms
-                write_last_buy_sell(last_buy_time, last_sell_time)
+    try: 
+        for i in range(1, polling_interval):
+            stats_laps_in_sec = stats_laps_in_sec + 1
             time.sleep(1)
-
-    trades = get_trades("Sell", last_sell_time)
-    if trades != TypeError:
-        for trade in trades:
-            price = trade['price'] - trade_gap
-            qty = trade['orderQty']
-            buy(price, qty)
-            # price up: double beep
-            print("\a\a")
-            if trade['timestamp'] > last_sell_time : 
-                last_sell_time = trade['timestamp'] + datetime.timedelta(microseconds = 1000) # bitmex resolution 1ms
-                write_last_buy_sell(last_buy_time, last_sell_time)
-            time.sleep(1)
+            print(".", end =" ", flush=True)
+        print(" ", end =" ", flush=True)
+    
+        if stats_laps_in_sec > stats_interval: 
+            print("")
+            #show_ticker()
+            show_pos()
+            stats_laps_in_sec = 0
+    
+        trades = get_trades("Buy", last_buy_time)
+        if trades != TypeError:
+            for trade in trades:
+                price = trade['price'] + trade_gap
+                qty = trade['orderQty']
+                sell(price, qty)
+                # price down: single beep
+                print("\a")
+                if trade['timestamp'] > last_buy_time : 
+                    last_buy_time = trade['timestamp'] + datetime.timedelta(microseconds = 1000) # bitmex resolution 1ms
+                    write_last_buy_sell(last_buy_time, last_sell_time)
+                time.sleep(1)
+    
+        trades = get_trades("Sell", last_sell_time)
+        if trades != TypeError:
+            for trade in trades:
+                price = trade['price'] - trade_gap
+                qty = trade['orderQty']
+                buy(price, qty)
+                # price up: double beep
+                print("\a\a")
+                if trade['timestamp'] > last_sell_time : 
+                    last_sell_time = trade['timestamp'] + datetime.timedelta(microseconds = 1000) # bitmex resolution 1ms
+                    write_last_buy_sell(last_buy_time, last_sell_time)
+                time.sleep(1)
+    except:
+        print("\033[91mBOT: Uncaught Exception!!\033[00m")
+        print('-'*60)
+        traceback.print_exc(file=sys.stdout)
+        print('-'*60)
 
