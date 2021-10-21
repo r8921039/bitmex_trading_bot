@@ -43,7 +43,7 @@ while True:
                     sell(price, qty)
                     # price down: single beep
                     print("\a")
-                else
+                else:
                     print("skip a trade as the price is not an order larger than the qty. executed trade side/price/qty")
                     print("{:>15s}{:>15s}{:>15s}".format(trade['side'], trade['price'], trade['orderQty']))
                 if trade['timestamp'] > last_buy_time : 
@@ -60,7 +60,7 @@ while True:
                     buy(price, qty)
                     # price up: double beep
                     print("\a\a")
-                else
+                else:
                     print("skip a trade as the price is not an order larger than the qty. executed trade side/price/qty")
                     print("{:>15s}{:>15s}{:>15s}".format(trade['side'], trade['price'], trade['orderQty']))
                 if trade['timestamp'] > last_sell_time : 
