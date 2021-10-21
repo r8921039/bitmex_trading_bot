@@ -8,11 +8,11 @@ side = "Sell"
 action = "Breakdown"
 #action = "Combine"
 if side == "Sell":
-    start_price = 54000 # inclusive
-    stop_price  = 56000 # exclusive
+    start_price = 72000 # inclusive
+    stop_price  = 75000 # exclusive
 elif side == "Buy":
-    start_price = 38000 # includsive
-    stop_price  = 40000 # exclusive
+    start_price = 55000 # includsive
+    stop_price  = 58000 # exclusive
 else:
     print("\033[91mError! side must be Buy/Sell\033[00m")
     sys.exit()
