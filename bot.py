@@ -44,8 +44,8 @@ while True:
                     # price down: single beep
                     print("\a")
                 else:
-                    print("skip a trade as the price is not an order larger than the qty. executed trade side/price/qty")
-                    print("{:>15s}{:>15s}{:>15s}".format(trade['side'], trade['price'], trade['orderQty']))
+                    print("\033[93mSkip a trade as the price is not an order larger than the qty. executed trade side/price/qty:")
+                    print("{:>15s}{:>15.2f}{:>15.0f}\033[00m".format(trade['side'], trade['price'], trade['orderQty']))
                 if trade['timestamp'] > last_buy_time : 
                     last_buy_time = trade['timestamp'] + datetime.timedelta(microseconds = 1000) # bitmex resolution 1ms
                     write_last_buy_sell(last_buy_time, last_sell_time)
@@ -61,8 +61,8 @@ while True:
                     # price up: double beep
                     print("\a\a")
                 else:
-                    print("skip a trade as the price is not an order larger than the qty. executed trade side/price/qty")
-                    print("{:>15s}{:>15s}{:>15s}".format(trade['side'], trade['price'], trade['orderQty']))
+                    print("\033[93mSkip a trade as the price is not an order larger than the qty. executed trade side/price/qty:")
+                    print("{:>15s}{:>15.2f}{:>15.0f}\033[00m".format(trade['side'], trade['price'], trade['orderQty']))
                 if trade['timestamp'] > last_sell_time : 
                     last_sell_time = trade['timestamp'] + datetime.timedelta(microseconds = 1000) # bitmex resolution 1ms
                     write_last_buy_sell(last_buy_time, last_sell_time)
