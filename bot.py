@@ -47,7 +47,7 @@ while True:
                     # price down: single beep
                     print("\a")
                 # case 1000: qty changes. logic in check.py has to match
-                elif trade['price'] == trade['orderQty'] and order['orderQty'] % 1000 == 0:
+                elif trade['price'] == trade['orderQty'] and trade['orderQty'] % 1000 == 0:
                     sell(new_price_1000, new_qty_1000)
                     # price down: single beep
                     print("\a")
@@ -74,7 +74,7 @@ while True:
                     # price up: double beep
                     print("\a\a")
                 # case 1000: qty changes. logic in check.py has to match
-                elif trade['price'] == trade['orderQty'] and order['orderQty'] % 1000 == 0:
+                elif trade['price'] == trade['orderQty'] and trade['orderQty'] % 1000 == 0:
                     buy(new_price_1000, new_qty_1000)
                     # price up: double beep
                     print("\a\a")
