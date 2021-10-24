@@ -55,7 +55,7 @@ while True:
                     print("\033[93mSkip a trade as the price is not an order larger than the qty. executed trade side/price/qty:")
                     print("{:>15s}{:>15.2f}{:>15.0f}\033[00m".format(trade['side'], trade['price'], trade['orderQty']))
 
-                if trade['timestamp'] > last_buy_time : 
+                if trade['timestamp'] > last_buy_time: 
                     last_buy_time = trade['timestamp'] + datetime.timedelta(microseconds = 1000) # bitmex resolution 1ms
                     write_last_buy_sell(last_buy_time, last_sell_time)
                 time.sleep(1)
@@ -68,8 +68,8 @@ while True:
                 new_qty_100 = trade['orderQty']
                 new_qty_1000 = trade['orderQty'] - 1000
                 # case 100/200: qty doesn't change
-                if (trade['price'] // 1000) * 100 == trade['orderQty'] or (new_price_100 // 1000) * 100 == trade['orderQty'] \ 
-                    or trade['price'] // 1000) * 200 == trade['orderQty'] or (new_price_100 // 1000) * 200 == trade['orderQty']:
+                if (trade['price'] // 1000) * 100 == trade['orderQty'] or (new_price_100 // 1000) * 100 == trade['orderQty'] \
+					or (trade['price'] // 1000) * 200 == trade['orderQty'] or (new_price_100 // 1000) * 200 == trade['orderQty']:
                     buy(new_price_100, new_qty_100)
                     # price up: double beep
                     print("\a\a")
@@ -82,7 +82,7 @@ while True:
                     print("\033[93mSkip a trade as the price is not an order larger than the qty. executed trade side/price/qty:")
                     print("{:>15s}{:>15.2f}{:>15.0f}\033[00m".format(trade['side'], trade['price'], trade['orderQty']))
 
-                if trade['timestamp'] > last_sell_time : 
+                if trade['timestamp'] > last_sell_time: 
                     last_sell_time = trade['timestamp'] + datetime.timedelta(microseconds = 1000) # bitmex resolution 1ms
                     write_last_buy_sell(last_buy_time, last_sell_time)
                 time.sleep(1)
