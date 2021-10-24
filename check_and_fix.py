@@ -14,6 +14,10 @@ show_ticker()
 #print(t)
 #print("")
 
+first_p_100 = 0
+first_p_200 = 0
+first_p_1000 = 0
+
 prev_p_100 = 0
 prev_p_200 = 0
 prev_p_1000 = 0
@@ -24,10 +28,8 @@ for order in buy_orders:
     # buy order at 35000 must have qty 3500
     if order['price'] // 1000 * 100 == order['orderQty'] or (order['price'] // 1000) * 100 + 100 == order['orderQty']:
         if prev_p_100 == 0:
-            prev_p_100 = order['price']
-            print("")
-            print("100 FIRST")
-            print("{:>15.0f}".format(order['price']))
+            first_p_100 = order['price']
+            prev_p_100 = first_p_100
         else:
             if order['price'] == prev_p_100 + 100:
                 #print("100 ok:" + str(order['price']))
@@ -55,10 +57,8 @@ for order in buy_orders:
             prev_p_100 = order['price']
     elif order['price'] // 1000 * 200 == order['orderQty'] or (order['price'] // 1000) * 100 + 200 == order['orderQty']:
         if prev_p_200 == 0:
-            prev_p_200 = order['price']
-            print("")
-            print("200 FIRST")
-            print("{:>15.0f}".format(order['price']))
+            first_p_200 = order['price']
+            prev_p_200 = first_p_200
         else:
             if order['price'] == prev_p_200 + 100:
                 #print("200 ok:" + str(order['price']))
@@ -86,10 +86,8 @@ for order in buy_orders:
             prev_p_200 = order['price']
     elif order['price'] == order['orderQty'] and order['orderQty'] % 1000 == 0: 
         if prev_p_1000 == 0:
-            prev_p_1000 = order['price']
-            print("")
-            print("1000 FIRST")
-            print("{:>15.0f}".format(order['price']))
+            first_p_1000 = order['price']
+            prev_p_1000 = first_p_1000
         else:
             if order['price'] == prev_p_1000 + 1000:
                 #print("1000 ok:" + str(order['price']))
@@ -105,24 +103,31 @@ for order in buy_orders:
         print("{:>15.0f}{:>15.0f}".format(order['price'], order['orderQty']))
 
 print()
-print("100 LAST")
-print("{:>15.0f}".format(prev_p_100))
-print()
-print("200 LAST")
-print("{:>15.0f}".format(prev_p_200))
-print()
+print("1000 FIRST")
+print("{:>15.0f}".format(first_p_1000))
 print("1000 LAST")
 print("{:>15.0f}".format(prev_p_1000))
 print()
-print("done buy orders (no printout means everything good)")
+print("100 FIRST")
+print("{:>15.0f}".format(first_p_100))
+print("100 LAST")
+print("{:>15.0f}".format(prev_p_100))
 print()
-
+print("200 FIRST")
+print("{:>15.0f}".format(first_p_200))
+print("200 LAST")
+print("{:>15.0f}".format(prev_p_200))
 
 #quit()
+
+print()
 show_ticker()
 
-
 sell_orders = get_all_sell_orders(log = False, price_reverse = False)
+
+first_p_100 = 0
+first_p_200 = 0
+first_p_1000 = 0
 
 prev_p_100 = 0
 prev_p_200 = 0
@@ -133,10 +138,8 @@ for order in sell_orders:
     # sell order at 35000 can have qty 3400 or 3500
     if order['price'] // 1000 * 100 == order['orderQty'] or (order['price'] // 1000) * 100 - 100 == order['orderQty']:
         if prev_p_100 == 0:
-            prev_p_100 = order['price']
-            print("")
-            print("100 FIRST")
-            print("{:>15.0f}".format(order['price']))
+            first_p_100 = order['price']
+            prev_p_100 = first_p_100
         else:
             if order['price'] == prev_p_100 + 100:
                 #print("100 ok:" + str(order['price'])) 
@@ -164,10 +167,8 @@ for order in sell_orders:
             prev_p_100 = order['price']
     elif order['price'] // 1000 * 200 == order['orderQty'] or (order['price'] // 1000) * 100 - 200 == order['orderQty']:
         if prev_p_200 == 0:
-            prev_p_200 = order['price']
-            print("")
-            print("200 FIRST")
-            print("{:>15.0f}".format(order['price']))
+            first_p_200 = order['price']
+            prev_p_200 = first_p_200
         else:
             if order['price'] == prev_p_200 + 100:
                 #print("200 ok:" + str(order['price']))
@@ -195,10 +196,8 @@ for order in sell_orders:
             prev_p_200 = order['price']
     elif order['price'] == order['orderQty'] and order['orderQty'] % 1000 == 0: 
         if prev_p_1000 == 0:
-            prev_p_1000 = order['price']
-            print("")
-            print("1000 FIRST")
-            print("{:>15.0f}".format(order['price']))
+            first_p_1000 = order['price']
+            prev_p_1000 = first_p_1000
         else:
             if order['price'] == prev_p_1000 + 1000:
                 #print("1000 ok:" + str(order['price']))
@@ -214,16 +213,19 @@ for order in sell_orders:
         print("{:>15.0f}{:>15.0f}".format(order['price'], order['orderQty']))
 
 print()
-print("100 LAST")
-print("{:>15.0f}".format(prev_p_100))
-print()
+print("200 FIRST")
+print("{:>15.0f}".format(first_p_200))
 print("200 LAST")
 print("{:>15.0f}".format(prev_p_200))
 print()
+print("100 FIRST")
+print("{:>15.0f}".format(first_p_100))
+print("100 LAST")
+print("{:>15.0f}".format(prev_p_100))
+print()
+print("1000 FIRST")
+print("{:>15.0f}".format(first_p_1000))
 print("1000 LAST")
 print("{:>15.0f}".format(prev_p_1000))
-print()
-print("done sell orders (no printout means everything good)")
-print()
 
 
