@@ -15,6 +15,7 @@ show_ticker()
 #print("")
 
 prev_p_100 = 0
+prev_p_200 = 0
 prev_p_1000 = 0
 
 buy_orders = get_all_buy_orders(log = False, price_reverse = False)
@@ -26,7 +27,7 @@ for order in buy_orders:
             prev_p_100 = order['price']
             print("")
             print("100 FIRST")
-            print("{:>15.0f}".format(order['price'])) 
+            print("{:>15.0f}".format(order['price']))
         else:
             if order['price'] == prev_p_100 + 100:
                 #print("100 ok:" + str(order['price']))
@@ -36,6 +37,21 @@ for order in buy_orders:
                 print("\033[93m100 WARN! CURRENT vs PREVIOUS!")
                 print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], prev_p_100))
             prev_p_100 = order['price']
+    elif order['price'] // 1000 * 200 == order['orderQty'] or (order['price'] // 1000) * 100 + 200 == order['orderQty']:
+        if prev_p_200 == 0:
+            prev_p_200 = order['price']
+            print("")
+            print("200 FIRST")
+            print("{:>15.0f}".format(order['price']))
+        else:
+            if order['price'] == prev_p_200 + 100:
+                #print("200 ok:" + str(order['price']))
+                print(" ", end =" ", flush=True)
+            else:
+                print("")
+                print("\033[93m200 WARN! CURRENT vs PREVIOUS!")
+                print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], prev_p_200))
+            prev_p_200 = order['price']
     elif order['price'] == order['orderQty'] and order['orderQty'] % 1000 == 0: 
         if prev_p_1000 == 0:
             prev_p_1000 = order['price']
@@ -60,6 +76,9 @@ print()
 print("100 LAST")
 print("{:>15.0f}".format(prev_p_100))
 print()
+print("200 LAST")
+print("{:>15.0f}".format(prev_p_200))
+print()
 print("1000 LAST")
 print("{:>15.0f}".format(prev_p_1000))
 print()
@@ -74,6 +93,7 @@ show_ticker()
 sell_orders = get_all_sell_orders(log = False, price_reverse = False)
 
 prev_p_100 = 0
+prev_p_200 = 0
 prev_p_1000 = 0
 
 for order in sell_orders:
@@ -94,6 +114,21 @@ for order in sell_orders:
                 print("\033[93m100 WARN! CURRENT vs PREVIOUS!")
                 print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], prev_p_100))
             prev_p_100 = order['price']
+    elif order['price'] // 1000 * 200 == order['orderQty'] or (order['price'] // 1000) * 100 - 200 == order['orderQty']:
+        if prev_p_200 == 0:
+            prev_p_200 = order['price']
+            print("")
+            print("200 FIRST")
+            print("{:>15.0f}".format(order['price']))
+        else:
+            if order['price'] == prev_p_200 + 100:
+                #print("200 ok:" + str(order['price']))
+                print(" ", end =" ", flush=True)
+            else:
+                print("")
+                print("\033[93m200 WARN! CURRENT vs PREVIOUS!")
+                print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], prev_p_200))
+            prev_p_200 = order['price']
     elif order['price'] == order['orderQty'] and order['orderQty'] % 1000 == 0: 
         if prev_p_1000 == 0:
             prev_p_1000 = order['price']
@@ -117,6 +152,9 @@ for order in sell_orders:
 print()
 print("100 LAST")
 print("{:>15.0f}".format(prev_p_100))
+print()
+print("200 LAST")
+print("{:>15.0f}".format(prev_p_200))
 print()
 print("1000 LAST")
 print("{:>15.0f}".format(prev_p_1000))
