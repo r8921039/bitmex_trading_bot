@@ -6,65 +6,122 @@ from lib import *
 now = pytz.utc.localize(datetime.datetime.utcnow())
 
 os.system('clear')
-print("\033[93m{:>15s}{:>30s} (UTC)\033[00m".format("CONVERT ORDERS", now.strftime("%d/%m/%Y %H:%M:%S")))
-
-print("")
-#show_pos()
+print("\033[93m{:>15s}{:>30s} (UTC)\033[00m".format("CHECK ORDERS", now.strftime("%d/%m/%Y %H:%M:%S")))
 
 show_ticker()
 
-t = get_ticker()
-print(t)
-print("")
+#t = get_ticker()
+#print(t)
+#print("")
+
+prev_p_100 = 0
+prev_p_1000 = 0
+
+buy_orders = get_all_buy_orders(log = False, price_reverse = False)
+for order in buy_orders:
+    # buy order at 34900 can have qty 3400 or 3500
+    # buy order at 35000 must have qty 3500
+    if order['price'] // 1000 * 100 == order['orderQty'] or (order['price'] // 1000) * 100 + 100 == order['orderQty']:
+        if prev_p_100 == 0:
+            prev_p_100 = order['price']
+            print("")
+            print("100 FIRST")
+            print("{:>15.0f}".format(order['price'])) 
+        else:
+            if order['price'] == prev_p_100 + 100:
+                #print("100 ok:" + str(order['price']))
+                print(" ", end =" ", flush=True)
+            else:
+                print("")
+                print("\033[93m100 WARN! CURRENT vs PREVIOUS!")
+                print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], prev_p_100))
+            prev_p_100 = order['price']
+    elif order['price'] == order['orderQty'] and order['orderQty'] % 1000 == 0: 
+        if prev_p_1000 == 0:
+            prev_p_1000 = order['price']
+            print("")
+            print("1000 FIRST")
+            print("{:>15.0f}".format(order['price']))
+        else:
+            if order['price'] == prev_p_1000 + 1000:
+                #print("1000 ok:" + str(order['price']))
+                print(" ", end =" ", flush=True)
+            else:
+                print("")
+                print("\033[93m1000 WARN! CURRENT vs PREVIOUS!")
+                print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], prev_p_1000))
+            prev_p_1000 = order['price']
+    else:
+        print("")
+        print("\033[93mWARN! ODD PRICE/QTY DETECTED!\033[00m")
+        print("{:>15.0f}{:>15.0f}".format(order['price'], order['orderQty']))
+
+print()
+print("100 LAST")
+print("{:>15.0f}".format(prev_p_100))
+print()
+print("1000 LAST")
+print("{:>15.0f}".format(prev_p_1000))
+print()
+print("done buy orders (no printout means everything good)")
+print()
+
+
+#quit()
+show_ticker()
+
 
 sell_orders = get_all_sell_orders(log = False, price_reverse = False)
 
-sell_first = sell_orders[0]['price']
-sell_last = sell_orders[-1]['price']
-sell_n_100 = 0
-sell_n_1000 = 0
-sell_n_na = 0
+prev_p_100 = 0
+prev_p_1000 = 0
 
 for order in sell_orders:
-    # price 34900 can have order qty 3400 or 3500
-    if order['price'] // 1000 * 100 == order['orderQty'] or (order['price'] // 1000 + 1) * 100 == order['orderQty']:
-        sell_n_100 += 1
-    elif order['price'] == order['orderQty']: 
-        sell_n_1000 += 1
+    # sell order at 34900 must have qty 3400
+    # sell order at 35000 can have qty 3400 or 3500
+    if order['price'] // 1000 * 100 == order['orderQty'] or (order['price'] // 1000) * 100 - 100 == order['orderQty']:
+        if prev_p_100 == 0:
+            prev_p_100 = order['price']
+            print("")
+            print("100 FIRST")
+            print("{:>15.0f}".format(order['price']))
+        else:
+            if order['price'] == prev_p_100 + 100:
+                #print("100 ok:" + str(order['price'])) 
+                print(" ", end =" ", flush=True)
+            else:
+                print("")
+                print("\033[93m100 WARN! CURRENT vs PREVIOUS!")
+                print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], prev_p_100))
+            prev_p_100 = order['price']
+    elif order['price'] == order['orderQty'] and order['orderQty'] % 1000 == 0: 
+        if prev_p_1000 == 0:
+            prev_p_1000 = order['price']
+            print("")
+            print("1000 FIRST")
+            print("{:>15.0f}".format(order['price']))
+        else:
+            if order['price'] == prev_p_1000 + 1000:
+                #print("1000 ok:" + str(order['price']))
+                print(" ", end =" ", flush=True)
+            else:
+                print("")
+                print("\033[93m1000 WARN! CURRENT vs PREVIOUS!")
+                print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], prev_p_1000))
+            prev_p_1000 = order['price']
     else:
-        print("order['price']" + str(order['price']) + "order['orderQty']" + str(order['orderQty']))
-        sell_n_na += 1
+        print("")
+        print("\033[93mWARN! ODD PRICE/QTY DETECTED!\033[00m")
+        print("{:>15.0f}{:>15.0f}".format(order['price'], order['orderQty']))
 
-print(sell_first)
-print(sell_last)
-print(sell_n_100)
-print(sell_n_1000)
-print(sell_n_na)
-
-print("")
-
-buy_orders = get_all_buy_orders(log = False, price_reverse = True)
-
-buy_first = buy_orders[0]['price']
-buy_last = buy_orders[-1]['price']
-buy_n_100 = 0
-buy_n_1000 = 0
-buy_n_na = 0
-
-for order in buy_orders:
-    # price 34900 can have order qty 3400 or 3500
-    if order['price'] // 1000 * 100 == order['orderQty'] or (order['price'] // 1000 + 1) * 100 == order['orderQty']:
-        buy_n_100 += 1
-    elif order['price'] == order['orderQty']: 
-        buy_n_1000 += 1
-    else:
-        print("order['price']" + str(order['price']) + "order['orderQty']" + str(order['orderQty']))
-        buy_n_na += 1
-
-print(buy_first)
-print(buy_last)
-print(buy_n_100)
-print(buy_n_1000)
-print(buy_n_na)
+print()
+print("100 LAST")
+print("{:>15.0f}".format(prev_p_100))
+print()
+print("1000 LAST")
+print("{:>15.0f}".format(prev_p_1000))
+print()
+print("done sell orders (no printout means everything good)")
+print()
 
 

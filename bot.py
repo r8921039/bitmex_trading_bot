@@ -3,7 +3,6 @@
 import argparse
 from lib import *
 
-trade_gap = 100 # the price gap to move over Sell side and Buy side 
 polling_interval = 3
 stats_interval = 60 * 3
 
@@ -37,15 +36,25 @@ while True:
         trades = get_trades("Buy", last_buy_time)
         if trades != TypeError:
             for trade in trades:
-                price = trade['price'] + trade_gap
-                qty = trade['orderQty']
-                if (trade['price'] // 1000) * 100 == trade['orderQty'] or (price // 1000) * 100 == trade['orderQty']:
-                    sell(price, qty)
+                new_price_100 = trade['price'] + 100
+                new_price_1000 = trade['price'] + 1000
+                new_qty_100 = trade['orderQty']
+                new_qty_1000 = trade['orderQty'] + 1000
+                # case 100/200: qty doesn't change
+                if (trade['price'] // 1000) * 100 == trade['orderQty'] or (new_price_100 // 1000) * 100 == trade['orderQty'] \
+                    or (trade['price'] // 1000) * 200 == trade['orderQty'] or (new_price_100 // 1000) * 200 == trade['orderQty']:
+                    sell(new_price_100, new_qty_100)
+                    # price down: single beep
+                    print("\a")
+                # case 1000: qty changes. logic in check.py has to match
+                elif trade['price'] == trade['orderQty'] and order['orderQty'] % 1000 == 0:
+                    sell(new_price_1000, new_qty_1000)
                     # price down: single beep
                     print("\a")
                 else:
                     print("\033[93mSkip a trade as the price is not an order larger than the qty. executed trade side/price/qty:")
                     print("{:>15s}{:>15.2f}{:>15.0f}\033[00m".format(trade['side'], trade['price'], trade['orderQty']))
+
                 if trade['timestamp'] > last_buy_time : 
                     last_buy_time = trade['timestamp'] + datetime.timedelta(microseconds = 1000) # bitmex resolution 1ms
                     write_last_buy_sell(last_buy_time, last_sell_time)
@@ -54,15 +63,25 @@ while True:
         trades = get_trades("Sell", last_sell_time)
         if trades != TypeError:
             for trade in trades:
-                price = trade['price'] - trade_gap
-                qty = trade['orderQty']
-                if (trade['price'] // 1000) * 100 == trade['orderQty'] or (price // 1000) * 100 == trade['orderQty']:
-                    buy(price, qty)
+                new_price_100 = trade['price'] - 100
+                new_price_1000 = trade['price'] - 1000
+                new_qty_100 = trade['orderQty']
+                new_qty_1000 = trade['orderQty'] - 1000
+                # case 100/200: qty doesn't change
+                if (trade['price'] // 1000) * 100 == trade['orderQty'] or (new_price_100 // 1000) * 100 == trade['orderQty'] \ 
+                    or trade['price'] // 1000) * 200 == trade['orderQty'] or (new_price_100 // 1000) * 200 == trade['orderQty']:
+                    buy(new_price_100, new_qty_100)
+                    # price up: double beep
+                    print("\a\a")
+                # case 1000: qty changes. logic in check.py has to match
+                elif trade['price'] == trade['orderQty'] and order['orderQty'] % 1000 == 0:
+                    buy(new_price_1000, new_qty_1000)
                     # price up: double beep
                     print("\a\a")
                 else:
                     print("\033[93mSkip a trade as the price is not an order larger than the qty. executed trade side/price/qty:")
                     print("{:>15s}{:>15.2f}{:>15.0f}\033[00m".format(trade['side'], trade['price'], trade['orderQty']))
+
                 if trade['timestamp'] > last_sell_time : 
                     last_sell_time = trade['timestamp'] + datetime.timedelta(microseconds = 1000) # bitmex resolution 1ms
                     write_last_buy_sell(last_buy_time, last_sell_time)
