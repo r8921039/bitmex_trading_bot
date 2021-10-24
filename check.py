@@ -35,7 +35,25 @@ for order in buy_orders:
             else:
                 print("")
                 print("\033[93m100 WARN! CURRENT vs PREVIOUS!")
-                print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], prev_p_100))
+                print("{:>15.0f}{:>15.0f}".format(order['price'], prev_p_100))
+                print("FIXING BUY 100...\033[00m")
+                if order['price'] == prev_p_100:
+                    result = cancel_order(order)
+                    time.sleep(5)
+                    if type(result) == dict:
+                        print("\033[91mCancel FAILED!")
+                        #print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], order['orderQty']))
+                    else:
+                        print("\033[93mCancel OKAY!")
+                        #print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], order['orderQty']))
+                elif order['price'] > prev_p_100 + 100 and order['price'] % 100 == 0:
+                    for price in range(prev_p_100 + 100, order['price'] - 1, 100):
+                        buy(price, price // 1000 * 100)
+                        time.sleep(5)
+                else:
+                    print("\033[91mUnexpected price/qty!!!\033[00m")
+                    print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], order['orderQty']))
+                print("\033[93mFIXING BUY 100... DONE!")
             prev_p_100 = order['price']
     elif order['price'] // 1000 * 200 == order['orderQty'] or (order['price'] // 1000) * 100 + 200 == order['orderQty']:
         if prev_p_200 == 0:
@@ -50,7 +68,25 @@ for order in buy_orders:
             else:
                 print("")
                 print("\033[93m200 WARN! CURRENT vs PREVIOUS!")
-                print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], prev_p_200))
+                print("{:>15.0f}{:>15.0f}".format(order['price'], prev_p_200))
+                print("FIXING BUY 200...\033[00m")
+                if order['price'] == prev_p_200:
+                    result = cancel_order(order)
+                    time.sleep(5)
+                    if type(result) == dict:
+                        print("\033[91mCancel FAILED!")
+                        #print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], order['orderQty']))
+                    else:
+                        print("\033[93mCancel OKAY!")
+                        #print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], order['orderQty']))
+                elif order['price'] > prev_p_200 + 100 and order['price'] % 100 == 0:
+                    for price in range(prev_p_200 + 100, order['price'] - 1, 100):
+                        buy(price, price // 1000 * 200)
+                        time.sleep(5)
+                else:
+                    print("\033[91mUnexpected price/qty!!!\033[00m")
+                    print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], order['orderQty']))
+                print("\033[93mFIXING BUY 200... DONE!")
             prev_p_200 = order['price']
     elif order['price'] == order['orderQty'] and order['orderQty'] % 1000 == 0: 
         if prev_p_1000 == 0:
@@ -112,7 +148,25 @@ for order in sell_orders:
             else:
                 print("")
                 print("\033[93m100 WARN! CURRENT vs PREVIOUS!")
-                print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], prev_p_100))
+                print("{:>15.0f}{:>15.0f}".format(order['price'], prev_p_100))
+                print("FIXING SELL 100...\033[00m")
+                if order['price'] == prev_p_100:
+                    result = cancel_order(order)
+                    time.sleep(5)
+                    if type(result) == dict:
+                        print("\033[91mCancel FAILED!")
+                        #print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], order['orderQty']))
+                    else:
+                        print("\033[93mCancel OKAY!")
+                        #print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], order['orderQty']))
+                elif order['price'] > prev_p_100 + 100 and order['price'] % 100 == 0:
+                    for price in range(prev_p_100 + 100, order['price'] - 1, 100):
+                        sell(price, price // 1000 * 100)
+                        time.sleep(5)
+                else:
+                    print("\033[91mUnexpected price/qty!!!\033[00m")
+                    print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], order['orderQty']))
+                print("\033[93mFIXING SELL 100... DONE!")
             prev_p_100 = order['price']
     elif order['price'] // 1000 * 200 == order['orderQty'] or (order['price'] // 1000) * 100 - 200 == order['orderQty']:
         if prev_p_200 == 0:
@@ -127,7 +181,25 @@ for order in sell_orders:
             else:
                 print("")
                 print("\033[93m200 WARN! CURRENT vs PREVIOUS!")
-                print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], prev_p_200))
+                print("{:>15.0f}{:>15.0f}".format(order['price'], prev_p_200))
+                print("FIXING SELL 200...\033[00m")
+                if order['price'] == prev_p_200:
+                    result = cancel_order(order)
+                    time.sleep(5)
+                    if type(result) == dict:
+                        print("\033[91mCancel FAILED!")
+                        #print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], order['orderQty']))
+                    else:
+                        print("\033[93mCancel OKAY!")
+                        #print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], order['orderQty']))
+                elif order['price'] > prev_p_200 + 100 and order['price'] % 100 == 0:
+                    for price in range(prev_p_200 + 100, order['price'] - 1, 100):
+                        sell(price, price // 1000 * 200)
+                        time.sleep(5)
+                else:
+                    print("\033[91mUnexpected price/qty!!!\033[00m")
+                    print("{:>15.0f}{:>15.0f}\033[00m".format(order['price'], order['orderQty']))
+                print("\033[93mFIXING SELL 200... DONE!")
             prev_p_200 = order['price']
     elif order['price'] == order['orderQty'] and order['orderQty'] % 1000 == 0: 
         if prev_p_1000 == 0:

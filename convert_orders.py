@@ -7,8 +7,12 @@ side = "Sell"
 #side = "Buy"
 action = "Breakdown"
 #action = "Combine"
+
+# currently only works for breakdowns.
+qty_multiple = 1
+
 if side == "Sell":
-    start_price = 72000 # inclusive
+    start_price = 74000 # inclusive
     stop_price  = 75000 # exclusive
 elif side == "Buy":
     start_price = 55000 # includsive
@@ -45,20 +49,23 @@ while price < stop_price:
         if len(orders) > 0:
             for order in orders:
                 print("")
-                result = cancel_order(order)
-                time.sleep(2)
-                print("")
-                if type(result) == dict:
-                    new_price = price
-                    # since 2021-06-07, bitmex requires qty multiples of 100
-                    new_qty = (price // 1000) * 100 
-                    for i in range(0, 10):
-                        if side == "Sell":
-                            sell(new_price, new_qty)
-                        else:
-                            buy(new_price, new_qty)
-                        time.sleep(3)
-                        new_price += new_price_gap
+                if order['price'] == order['orderQty'] and order['orderQty'] % 1000 == 0:
+                    result = cancel_order(order)
+                    time.sleep(2)
+                    print("")
+                    if type(result) == dict:
+                        new_price = price
+                        # since 2021-06-07, bitmex requires qty multiples of 100
+                        new_qty = (price // 1000) * 100 * qty_multiple
+                        for i in range(0, 10):
+                            if side == "Sell":
+                                sell(new_price, new_qty)
+                            else:
+                                buy(new_price, new_qty)
+                            time.sleep(5)
+                            new_price += new_price_gap
+                else:
+                    print("\033[93mSKIP! PRICE/QTY not qualified\033[00m")
         price += old_price_gap
         time.sleep(3)
 
@@ -69,17 +76,17 @@ while price < stop_price:
         old_price = price
         for i in range(0, 10):
             orders = get_orders(side, old_price)
-            time.sleep(2)
+            time.sleep(3)
             cancel_orders(orders)
-            time.sleep(2)
+            time.sleep(3)
             old_price += old_price_gap
         print("")
         print("")
+        time.sleep(3)
         if side == "Sell":
             sell(price, price)
         else:
             buy(price, price)
-        time.sleep(3)
         price += new_price_gap
         time.sleep(3)
 
