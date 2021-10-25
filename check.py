@@ -70,7 +70,7 @@ for order in buy_orders:
                 else:
                     print("SKIP FIXING BUY 100\033[00m")
             prev_p_100 = order['price']
-    elif order['price'] // 1000 * 200 == order['orderQty'] or (order['price'] // 1000) * 100 + 200 == order['orderQty']:
+    elif order['price'] // 1000 * 200 == order['orderQty'] or (order['price'] // 1000) * 200 + 200 == order['orderQty']:
         if prev_p_200 == 0:
             first_p_200 = order['price']
             prev_p_200 = first_p_200
@@ -205,7 +205,7 @@ for order in sell_orders:
                 else:
                     print("\033[93mSKIP FIXING SELL 100\033[00m")
             prev_p_100 = order['price']
-    elif order['price'] // 1000 * 200 == order['orderQty'] or (order['price'] // 1000) * 100 - 200 == order['orderQty']:
+    elif order['price'] // 1000 * 200 == order['orderQty'] or (order['price'] // 1000) * 200 - 200 == order['orderQty']:
         if prev_p_200 == 0:
             first_p_200 = order['price']
             prev_p_200 = first_p_200
