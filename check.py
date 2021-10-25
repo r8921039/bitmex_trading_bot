@@ -11,9 +11,9 @@ print("")
 #show_ticker()
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-f", help="add missing and cancel duplicate orders", action="store_true")
+parser.add_argument("-f", "--fix", help="add missing and cancel duplicate orders", action="store_true")
 args = parser.parse_args()
-if args.f:
+if args.fix:
     print("\033[93mFIX MODE")
     print("{:>15s}\033[00m".format("ON"))
     fix_mode = True
