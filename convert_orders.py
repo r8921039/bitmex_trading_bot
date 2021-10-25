@@ -9,14 +9,14 @@ action = "Breakdown"
 #action = "Combine"
 
 # currently only works for breakdowns.
-qty_multiple = 1
+qty_multiple = 2
 
 if side == "Sell":
     start_price = 70000 # inclusive
     stop_price  = 75000 # exclusive
 elif side == "Buy":
-    start_price = 55000 # includsive
-    stop_price  = 58000 # exclusive
+    start_price = 61000 # includsive
+    stop_price  = 63000 # exclusive
 else:
     print("\033[91mError! side must be Buy/Sell\033[00m")
     sys.exit()
