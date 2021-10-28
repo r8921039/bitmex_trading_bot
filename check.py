@@ -5,6 +5,8 @@ from lib import *
 
 now = pytz.utc.localize(datetime.datetime.utcnow())
 
+verbose = False
+
 os.system('clear')
 print("\033[93m{:<15s}{:>30s} (UTC)\033[00m".format("[CHECK AND FIX]", now.strftime("%d/%m/%Y %H:%M:%S")))
 print("")
@@ -123,7 +125,7 @@ for order in buy_orders:
                             print("\033[91mCancel FAILED!\033[00m")
                         else:
                             print("\033[93mCancel OKAY!\033[00m")
-                    elif order['price'] > prev_p_1000 + 1000 and order['price'] % 1000 == 0:
+                    elif order['price'] > prev_p_1000 + 1000 and order['price'] % 1000 == 0 and order['price'] < prev_p_1000 + 10000:
                         for price in range(int(prev_p_1000) + 1000, int(order['price']) - 1, 1000):
                             buy(price, price)
                             time.sleep(5)
@@ -139,26 +141,28 @@ for order in buy_orders:
         print("\033[93mBUY XXX WARN! ODD PRICE/QTY DETECTED!\033[00m")
         print("{:>15.0f}{:>15.0f}".format(order['price'], order['orderQty']))
 
-print()
-print("BUY 1000 FIRST")
-print("{:>15.0f}".format(first_p_1000))
-print("BUY 1000 LAST")
-print("{:>15.0f}".format(prev_p_1000))
-print()
-print("BUY 200 FIRST")
-print("{:>15.0f}".format(first_p_200))
-print("BUY 200 LAST")
-print("{:>15.0f}".format(prev_p_200))
-print()
-print("BUY 100 FIRST")
-print("{:>15.0f}".format(first_p_100))
-print("BUY 100 LAST")
-print("{:>15.0f}".format(prev_p_100))
-
-#quit()
-
-print()
-show_ticker()
+if verbose == True:
+	if first_p_1000 > 0:
+		print()
+		print("BUY 1000 FIRST")
+		print("{:>15.0f}".format(first_p_1000))
+		print("BUY 1000 LAST")
+		print("{:>15.0f}".format(prev_p_1000))
+	if first_p_1000 > 0:
+		print()
+		print("BUY 200 FIRST")
+		print("{:>15.0f}".format(first_p_200))
+		print("BUY 200 LAST")
+		print("{:>15.0f}".format(prev_p_200))
+	if first_p_1000 > 0:
+		print()
+		print("BUY 100 FIRST")
+		print("{:>15.0f}".format(first_p_100))
+		print("BUY 100 LAST")
+		print("{:>15.0f}".format(prev_p_100))
+	
+	print()
+	show_ticker()
 
 sell_orders = get_all_sell_orders(log = False, price_reverse = False)
 
@@ -258,7 +262,7 @@ for order in sell_orders:
                             print("\033[91mCancel FAILED!\033[00m")
                         else:
                             print("\033[93mCancel OKAY!\033[00m")
-                    elif order['price'] > prev_p_1000 + 1000 and order['price'] % 1000 == 0:
+                    elif order['price'] > prev_p_1000 + 1000 and order['price'] % 1000 == 0 and order['price'] < prev_p_1000 + 10000:
                         for price in range(int(prev_p_1000) + 1000, int(order['price']) - 1, 1000):
                             sell(price, price)
                             time.sleep(5)
@@ -274,20 +278,25 @@ for order in sell_orders:
         print("\033[93mSELL XXX WARN! ODD PRICE/QTY DETECTED!\033[00m")
         print("{:>15.0f}{:>15.0f}".format(order['price'], order['orderQty']))
 
-print()
-print("SELL 100 FIRST")
-print("{:>15.0f}".format(first_p_100))
-print("SELL 100 LAST")
-print("{:>15.0f}".format(prev_p_100))
-print()
-print("SELL 200 FIRST")
-print("{:>15.0f}".format(first_p_200))
-print("SELL 200 LAST")
-print("{:>15.0f}".format(prev_p_200))
-print()
-print("SELL 1000 FIRST")
-print("{:>15.0f}".format(first_p_1000))
-print("1000 LAST")
-print("{:>15.0f}".format(prev_p_1000))
+
+if verbose == True:
+	if first_p_200 > 0:
+		print()
+		print("SELL 200 FIRST")
+		print("{:>15.0f}".format(first_p_200))
+		print("SELL 200 LAST")
+		print("{:>15.0f}".format(prev_p_200))
+	if first_p_100 > 0:
+		print()
+		print("SELL 100 FIRST")
+		print("{:>15.0f}".format(first_p_100))
+		print("SELL 100 LAST")
+		print("{:>15.0f}".format(prev_p_100))
+	if first_p_1000 > 0:
+		print()
+		print("SELL 1000 FIRST")
+		print("{:>15.0f}".format(first_p_1000))
+		print("1000 LAST")
+		print("{:>15.0f}".format(prev_p_1000))
 
 
