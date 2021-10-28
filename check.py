@@ -7,7 +7,7 @@ now = pytz.utc.localize(datetime.datetime.utcnow())
 
 verbose = False
 
-os.system('clear')
+#os.system('clear')
 print("\033[93m{:<15s}{:>30s} (UTC)\033[00m".format("[CHECK AND FIX]", now.strftime("%d/%m/%Y %H:%M:%S")))
 print("")
 #show_ticker()
@@ -46,8 +46,7 @@ for order in buy_orders:
             prev_p_100 = first_p_100
         else:
             if order['price'] == prev_p_100 + 100:
-                #print("100 ok:" + str(order['price']))
-                print(" ", end =" ", flush=True)
+				noop()
             else:
                 print("")
                 print("\033[93mBUY 100 WARN! CURRENT vs PREVIOUS!")
@@ -78,8 +77,7 @@ for order in buy_orders:
             prev_p_200 = first_p_200
         else:
             if order['price'] == prev_p_200 + 100:
-                #print("200 ok:" + str(order['price']))
-                print(" ", end =" ", flush=True)
+				noop()
             else:
                 print("")
                 print("\033[93mBUY 200 WARN! CURRENT vs PREVIOUS!")
@@ -110,8 +108,7 @@ for order in buy_orders:
             prev_p_1000 = first_p_1000
         else:
             if order['price'] == prev_p_1000 + 1000:
-                #print("1000 ok:" + str(order['price']))
-                print(" ", end =" ", flush=True)
+				noop()
             else:
                 print("")
                 print("\033[93mBUY 1000 WARN! CURRENT vs PREVIOUS!")
@@ -183,8 +180,7 @@ for order in sell_orders:
             prev_p_100 = first_p_100
         else:
             if order['price'] == prev_p_100 + 100:
-                #print("100 ok:" + str(order['price'])) 
-                print(" ", end =" ", flush=True)
+				noop()
             else:
                 print("")
                 print("\033[93mSELL 100 WARN! CURRENT vs PREVIOUS!")
@@ -215,8 +211,7 @@ for order in sell_orders:
             prev_p_200 = first_p_200
         else:
             if order['price'] == prev_p_200 + 100:
-                #print("200 ok:" + str(order['price']))
-                print(" ", end =" ", flush=True)
+				noop()
             else:
                 print("")
                 print("\033[93mSELL 200 WARN! CURRENT vs PREVIOUS!")
@@ -247,8 +242,7 @@ for order in sell_orders:
             prev_p_1000 = first_p_1000
         else:
             if order['price'] == prev_p_1000 + 1000:
-                #print("1000 ok:" + str(order['price']))
-                print(" ", end =" ", flush=True)
+				noop()
             else:
                 print("")
                 print("\033[93mSELL 1000 WARN! CURRENT vs PREVIOUS!")
