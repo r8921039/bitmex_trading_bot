@@ -46,7 +46,7 @@ for order in buy_orders:
             prev_p_100 = first_p_100
         else:
             if order['price'] == prev_p_100 + 100:
-				pass
+                pass
             else:
                 print("")
                 print("\033[93mBUY 100 WARN! CURRENT vs PREVIOUS!")
@@ -77,7 +77,7 @@ for order in buy_orders:
             prev_p_200 = first_p_200
         else:
             if order['price'] == prev_p_200 + 100:
-				pass
+                noop()
             else:
                 print("")
                 print("\033[93mBUY 200 WARN! CURRENT vs PREVIOUS!")
@@ -108,7 +108,7 @@ for order in buy_orders:
             prev_p_1000 = first_p_1000
         else:
             if order['price'] == prev_p_1000 + 1000:
-				pass
+                noop()
             else:
                 print("")
                 print("\033[93mBUY 1000 WARN! CURRENT vs PREVIOUS!")
@@ -180,7 +180,7 @@ for order in sell_orders:
             prev_p_100 = first_p_100
         else:
             if order['price'] == prev_p_100 + 100:
-				pass
+                noop()
             else:
                 print("")
                 print("\033[93mSELL 100 WARN! CURRENT vs PREVIOUS!")
@@ -211,7 +211,7 @@ for order in sell_orders:
             prev_p_200 = first_p_200
         else:
             if order['price'] == prev_p_200 + 100:
-				pass
+                noop()
             else:
                 print("")
                 print("\033[93mSELL 200 WARN! CURRENT vs PREVIOUS!")
@@ -242,7 +242,7 @@ for order in sell_orders:
             prev_p_1000 = first_p_1000
         else:
             if order['price'] == prev_p_1000 + 1000:
-				pass
+                noop()
             else:
                 print("")
                 print("\033[93mSELL 1000 WARN! CURRENT vs PREVIOUS!")
