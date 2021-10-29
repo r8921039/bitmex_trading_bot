@@ -21,6 +21,7 @@ while True:
         if stats_laps_in_sec > stats_interval:
             stats_laps_in_sec = 0
             now = pytz.utc.localize(datetime.datetime.utcnow())
+            print("")
             if fix_mode == True:
                 print("\033[93m{:<15s}{:>30s} (UTC)\033[00m".format("[CHECK AND FIX]", now.strftime("%d/%m/%Y %H:%M:%S")))
             else:
