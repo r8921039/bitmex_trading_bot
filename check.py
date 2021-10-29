@@ -4,6 +4,7 @@ import argparse
 from lib import *
 
 polling_interval = 60
+stats_interval = 60 * 10
 verbose = False
 
 parser = argparse.ArgumentParser()
@@ -14,14 +15,16 @@ if args.fix:
 else:
     fix_mode = False
 
+stats_laps_in_sec = 1000000000
 while True:
     try:
-        now = pytz.utc.localize(datetime.datetime.utcnow())
-        print("")
-        if fix_mode == True:
-            print("\033[93m{:<15s}{:>30s} (UTC)\033[00m".format("[CHECK AND FIX]", now.strftime("%d/%m/%Y %H:%M:%S")))
-        else:
-            print("\033[93m{:<15s}{:>30s} (UTC)\033[00m".format("[CHECK ONLY]", now.strftime("%d/%m/%Y %H:%M:%S")))
+        if stats_laps_in_sec > stats_interval:
+            stats_laps_in_sec = 0
+            now = pytz.utc.localize(datetime.datetime.utcnow())
+            if fix_mode == True:
+                print("\033[93m{:<15s}{:>30s} (UTC)\033[00m".format("[CHECK AND FIX]", now.strftime("%d/%m/%Y %H:%M:%S")))
+            else:
+                print("\033[93m{:<15s}{:>30s} (UTC)\033[00m".format("[CHECK ONLY]", now.strftime("%d/%m/%Y %H:%M:%S")))
 
         first_p_100 = 0
         first_p_200 = 0
@@ -294,6 +297,7 @@ while True:
         print('-'*60)
 
     for i in range(1, polling_interval):
+        stats_laps_in_sec = stats_laps_in_sec + 1
         time.sleep(1)
         print(".", end =" ", flush=True)
     print(" ", end =" ", flush=True) 
