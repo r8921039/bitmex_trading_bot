@@ -21,6 +21,7 @@ while True:
         if stats_laps_in_sec > stats_interval:
             stats_laps_in_sec = 0
             now = pytz.utc.localize(datetime.datetime.utcnow())
+            print("")
             if fix_mode == True:
                 print("\033[93m{:<15s}{:>30s} (UTC)\033[00m".format("[CHECK AND FIX]", now.strftime("%d/%m/%Y %H:%M:%S")))
             else:
@@ -52,6 +53,8 @@ while True:
                         if fix_mode == True:
                             print("FIXING BUY 100...\033[00m")
                             if order['price'] == prev_p_100:
+                                # tripple beeps
+                                print("\a\a\a") 
                                 result = cancel_order(order)
                                 time.sleep(5)
                                 if type(result) == dict:
@@ -60,6 +63,8 @@ while True:
                                     print("\033[93mCancel OKAY!\033[00m")
                             elif order['price'] > prev_p_100 + 100 and order['price'] % 100 == 0:
                                 for price in range(int(prev_p_100) + 100, int(order['price']) - 1, 100):
+                                    # tripple beeps
+                                    print("\a\a\a")
                                     buy(price, price // 1000 * 100)
                                     time.sleep(5)
                             else:
@@ -83,6 +88,8 @@ while True:
                         if fix_mode == True:
                             print("FIXING BUY 200...\033[00m")
                             if order['price'] == prev_p_200:
+                                # tripple beeps
+                                print("\a\a\a")
                                 result = cancel_order(order)
                                 time.sleep(5)
                                 if type(result) == dict:
@@ -91,6 +98,8 @@ while True:
                                     print("\033[93mCancel OKAY!\033[00m")
                             elif order['price'] > prev_p_200 + 100 and order['price'] % 100 == 0:
                                 for price in range(int(prev_p_200) + 100, int(order['price']) - 1, 100):
+                                    # tripple beeps
+                                    print("\a\a\a")
                                     buy(price, price // 1000 * 200)
                                     time.sleep(5)
                             else:
@@ -114,6 +123,8 @@ while True:
                         if fix_mode == True:
                             print("FIXING BUY 1000...\033[00m")
                             if order['price'] == prev_p_1000:
+                                # tripple beeps
+                                print("\a\a\a")
                                 result = cancel_order(order)
                                 time.sleep(5)
                                 if type(result) == dict:
@@ -122,6 +133,8 @@ while True:
                                     print("\033[93mCancel OKAY!\033[00m")
                             elif order['price'] > prev_p_1000 + 1000 and order['price'] % 1000 == 0 and order['price'] < prev_p_1000 + 10000:
                                 for price in range(int(prev_p_1000) + 1000, int(order['price']) - 1, 1000):
+                                    # tripple beeps
+                                    print("\a\a\a")
                                     buy(price, price)
                                     time.sleep(5)
                             else:
@@ -186,6 +199,8 @@ while True:
                         if fix_mode == True:
                             print("FIXING SELL 100...\033[00m")
                             if order['price'] == prev_p_100:
+                                # tripple beeps
+                                print("\a\a\a")
                                 result = cancel_order(order)
                                 time.sleep(5)
                                 if type(result) == dict:
@@ -194,6 +209,8 @@ while True:
                                     print("\033[93mCancel OKAY!\033[00m")
                             elif order['price'] > prev_p_100 + 100 and order['price'] % 100 == 0:
                                 for price in range(int(prev_p_100) + 100, int(order['price']) - 1, 100):
+                                    # tripple beeps
+                                    print("\a\a\a")
                                     sell(price, price // 1000 * 100)
                                     time.sleep(5)
                             else:
@@ -217,6 +234,8 @@ while True:
                         if fix_mode == True:
                             print("FIXING SELL 200...\033[00m")
                             if order['price'] == prev_p_200:
+                                # tripple beeps
+                                print("\a\a\a")
                                 result = cancel_order(order)
                                 time.sleep(5)
                                 if type(result) == dict:
@@ -225,6 +244,8 @@ while True:
                                     print("\033[93mCancel OKAY!\033[00m")
                             elif order['price'] > prev_p_200 + 100 and order['price'] % 100 == 0:
                                 for price in range(int(prev_p_200) + 100, int(order['price']) - 1, 100):
+                                    # tripple beeps
+                                    print("\a\a\a")
                                     sell(price, price // 1000 * 200)
                                     time.sleep(5)
                             else:
@@ -248,6 +269,8 @@ while True:
                         if fix_mode == True:
                             print("FIXING SELL 1000...\033[00m")
                             if order['price'] == prev_p_1000:
+                                # tripple beeps
+                                print("\a\a\a")
                                 result = cancel_order(order)
                                 time.sleep(5)
                                 if type(result) == dict:
@@ -256,6 +279,8 @@ while True:
                                     print("\033[93mCancel OKAY!\033[00m")
                             elif order['price'] > prev_p_1000 + 1000 and order['price'] % 1000 == 0 and order['price'] < prev_p_1000 + 10000:
                                 for price in range(int(prev_p_1000) + 1000, int(order['price']) - 1, 1000):
+                                    # tripple beeps
+                                    print("\a\a\a")
                                     sell(price, price)
                                     time.sleep(5)
                             else:
