@@ -5,18 +5,19 @@ from lib import *
 
 #side = "Sell"
 side = "Buy"
-action = "Breakdown"
+#action = "Breakdown"
 #action = "Combine"
+action = "Convert"
 
-# currently only works for breakdowns.
+# works for Breakdown and Convert. It won't Combine to 2x1000 orders
 qty_multiple = 2
 
 if side == "Sell":
-    start_price = 70000 # inclusive
-    stop_price  = 75000 # exclusive
-elif side == "Buy":
-    start_price = 61000 # includsive
+    start_price = 60000 # inclusive
     stop_price  = 63000 # exclusive
+elif side == "Buy":
+    start_price = 62000 # includsive
+    stop_price  = 62300 # exclusive
 else:
     print("\033[91mError! side must be Buy/Sell\033[00m")
     sys.exit()
@@ -27,6 +28,9 @@ if action == "Breakdown":
 elif action  == "Combine": 
     old_price_gap = 100
     new_price_gap = 1000
+elif action == "Convert":
+    old_price_gap = 100
+    new_price_gap = 100
 else:
     print("\033[91mError! action must be Breakdown/Combine\033[00m")
     sys.exit()
@@ -96,6 +100,24 @@ while price < stop_price:
             sell(price, price)
         else:
             buy(price, price)
+        price += new_price_gap
+        time.sleep(3)
+
+    # Convert
+    elif old_price_gap == 100 and new_price_gap == 100:
+        print("")
+        print("")
+        orders = get_orders(side, price)
+        time.sleep(3)
+        cancel_orders(orders)
+        time.sleep(3)
+        print("")
+        print("")
+        time.sleep(3)
+        if side == "Sell":
+            sell(price, (price // 1000) * 100 * qty_multiple)
+        else:
+            buy(price, (price // 1000) * 100 * qty_multiple)
         price += new_price_gap
         time.sleep(3)
 
