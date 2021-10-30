@@ -1,6 +1,5 @@
 .apikey
 .last_buy_sell
 __pycache__/
-count.log
-out.log
-out_sh.log
+*.log
+*.swp
