@@ -3,8 +3,8 @@
 import argparse
 from lib import *
 
-polling_interval = 60 * 5
-stats_interval = 60 * 10
+polling_interval = 60 * 10
+stats_interval = 60 * 30
 verbose = False
 
 parser = argparse.ArgumentParser()
@@ -184,7 +184,7 @@ def fix_range():
 
         # PRICE GOING UP
         if sell_last_200 < target_sell_last_200:
-            print("ADD SELL 200")
+            print("ADD   SELL  200")
             for p in range(sell_last_200 + 100, target_sell_last_200 + 100, 100):
                 if fix_mode:
                     sell(p, (p // 1000) * 200)
@@ -193,7 +193,7 @@ def fix_range():
                     print(p)
 
         if sell_last_1000 < target_sell_last_1000:
-            print("ADD SELL 1000")
+            print("ADD    SELL 1000")
             for p in range(sell_last_1000 + 1000, target_sell_last_1000 + 1000, 1000):
                 if fix_mode:
                     sell(p, (p // 1000) * 1000)
@@ -202,7 +202,7 @@ def fix_range():
                     print(p)
 
         if buy_last_1000 < target_buy_last_1000:
-            print("ADD BUY 1000")
+            print("ADD    BUY  1000")
             for p in range(buy_last_1000 + 1000, target_buy_last_1000 + 1000, 1000):
                 if fix_mode:
                     buy(p, (p // 1000) * 1000)
@@ -212,7 +212,7 @@ def fix_range():
 
         # PRICE GOING DOWN
         if target_buy_first_200 < buy_first_200:
-            print("ADD BUY 200")
+            print("ADD    BUY 200")
             for p in range(target_buy_first_200, buy_first_200, 100):
                 if fix_mode:
                     buy(p, (p // 1000) * 200)
@@ -221,7 +221,7 @@ def fix_range():
                     print(p)
 
         if target_buy_first_1000 < buy_first_1000:
-            print("ADD BUY 1000")
+            print("ADD    BUY 1000")
             for p in range(target_buy_first_1000, buy_first_1000, 1000):
                 if fix_mode:
                     buy(p, (p // 1000) * 1000)
@@ -230,7 +230,7 @@ def fix_range():
                     print(p)
         
         if target_sell_first_1000 < sell_first_1000:
-            print("ADD SELL 1000")
+            print("ADD    SELL 1000")
             for p in range(target_sell_first_1000, sell_first_1000, 1000):
                 if fix_mode:
                     sell(p, (p // 1000) * 1000)
