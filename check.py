@@ -3,7 +3,7 @@
 import argparse
 from lib import *
 
-polling_interval = 60
+polling_interval = 60 * 5
 stats_interval = 60 * 10
 verbose = False
 
@@ -15,18 +15,236 @@ if args.fix:
 else:
     fix_mode = False
 
-stats_laps_in_sec = 1000000000
-while True:
+def fix_range():
     try:
-        if stats_laps_in_sec > stats_interval:
-            stats_laps_in_sec = 0
-            now = pytz.utc.localize(datetime.datetime.utcnow())
-            print("")
-            if fix_mode == True:
-                print("\033[93m{:<15s}{:>30s} (UTC)\033[00m".format("[CHECK AND FIX]", now.strftime("%d/%m/%Y %H:%M:%S")))
-            else:
-                print("\033[93m{:<15s}{:>30s} (UTC)\033[00m".format("[CHECK ONLY]", now.strftime("%d/%m/%Y %H:%M:%S")))
+        ticker = get_ticker()
 
+        #
+        # [RANGE] GET TARGET/CURRENT BUY
+        # 
+
+        target_buy_first_200 = int(ticker) // 100 * 100 - 8000
+        target_buy_last_1000 = target_buy_first_200 // 1000 * 1000
+        if target_buy_last_1000 >= target_buy_first_200:
+            target_buy_last_1000 = target_buy_last_1000 - 1000
+        target_buy_first_1000 = target_buy_last_1000 - 15000
+        if target_buy_first_1000 < 1000:
+            print("\033[93mFirst RANGE BUY less than 1000!")
+            target_buy_first_1000 = 1000
+
+        buy_first_200 = 0
+        buy_first_1000 = 0
+        buy_last_200 = 0
+        buy_last_1000 = 0
+        buy_orders = get_all_buy_orders(log = False, price_reverse = False)
+        for order in buy_orders:
+            if order['price'] // 1000 * 200 == order['orderQty'] or (order['price'] // 1000) * 200 + 200 == order['orderQty']:
+                if buy_last_200 == 0:
+                    buy_first_200 = int(order['price'])
+                    buy_last_200 = buy_first_200
+                else:
+                    buy_last_200 = int(order['price'])
+            elif order['price'] == order['orderQty'] and order['orderQty'] % 1000 == 0:
+                if buy_last_1000 == 0:
+                    buy_first_1000 = int(order['price'])
+                    buy_last_1000 = buy_first_1000
+                else:
+                    buy_last_1000 = int(order['price'])
+
+        if verbose or target_buy_first_1000 != buy_first_1000 or target_buy_last_1000 != buy_last_1000 or target_buy_first_200 != buy_first_200:
+            print("")
+            print("\033[93m{:>20s}{:>20s}{:>20s}{:>20s}\033[00m".format("TARGET  FIRST 1000 BUY", "LAST 1000 BUY", "FIRST 200 BUY", "LAST 200 BUY"))
+            print("\033[93m{:>20.0f}{:>20.0f}{:>20.0f}{:>20s}\033[00m".format(target_buy_first_1000, target_buy_last_1000, target_buy_first_200, "NA"))
+            print("\033[32m{:>20s}{:>20s}{:>20s}{:>20s}\033[00m".format("CURRENT FIRST 1000 BUY", "LAST 1000 BUY", "FIRST 200 BUY", "LAST 200 BUY"))
+            print("\033[32m{:>20.0f}{:>20.0f}{:>20.0f}{:>20.0f}\033[00m".format(buy_first_1000, buy_last_1000, buy_first_200, buy_last_200))
+            print("")
+
+        #
+        # [RANGE] GET TARGET/CURRENT SELL
+        #
+
+        target_sell_last_200 = int(ticker) // 100 * 100 + 8000
+        target_sell_first_1000 = target_sell_last_200 // 1000 * 1000 + 1000
+        target_sell_last_1000 = target_sell_first_1000 + 15000
+
+        sell_first_200 = 0
+        sell_first_1000 = 0
+        sell_last_200 = 0
+        sell_last_1000 = 0
+        sell_orders = get_all_sell_orders(log = False, price_reverse = False)
+        for order in sell_orders:
+            if order['price'] // 1000 * 200 == order['orderQty'] or (order['price'] // 1000) * 200 - 200 == order['orderQty']:
+                if sell_last_200 == 0:
+                    sell_first_200 = int(order['price'])
+                    sell_last_200 = sell_first_200
+                else:
+                    sell_last_200 = int(order['price'])
+            elif order['price'] == order['orderQty'] and order['orderQty'] % 1000 == 0:
+                if sell_last_1000 == 0:
+                    sell_first_1000 = int(order['price'])
+                    sell_last_1000 = sell_first_1000
+                else:
+                    sell_last_1000 = int(order['price'])
+
+        if verbose or target_sell_last_200 != sell_last_200 or target_sell_first_1000 != sell_first_1000 or target_sell_last_1000 != sell_last_1000:
+            print("")
+            print("\033[93m{:>20s}{:>20s}{:>20s}{:>20s}\033[00m".format("TARGET  FIRST 200 SELL", "LAST 200 SELL", "FIRST 1000 SELL", "LAST 1000 SELL"))
+            print("\033[93m{:>20s}{:>20.0f}{:>20.0f}{:>20.0f}\033[00m".format("NA", target_sell_last_200, target_sell_first_1000, target_sell_last_1000))
+            print("\033[35m{:>20s}{:>20s}{:>20s}{:>20s}\033[00m".format("CURRENT FIRST 200 SELL", "LAST 200 SELL", "FIRST 1000 SELL", "LAST 1000 SELL"))
+            print("\033[35m{:>20.0f}{:>20.0f}{:>20.0f}{:>20.0f}\033[00m".format(sell_first_200, sell_last_200, sell_first_1000, sell_last_1000))
+            print("")
+
+        #
+        # [RANGE CANCEL] BUY/SELL
+        #
+
+        # PRICE GOING UP
+        if buy_first_200 < target_buy_first_200:
+            print("CANCEL BUY 200")
+            for p in range(buy_first_200, target_buy_first_200, 100):
+                if fix_mode:
+                    orders = get_orders("Buy", p)
+                    time.sleep(3)
+                    for order in orders:
+                        if order['price'] // 1000 * 200 == order['orderQty']:
+                            cancel_order(order)
+                            time.sleep(3)
+                else:
+                    print(p)
+
+        if buy_first_1000 < target_buy_first_1000:
+            print("CANCEL BUY 1000")
+            for p in range(buy_first_1000, target_buy_first_1000, 1000):
+                if fix_mode:
+                    orders = get_orders("Buy", p)
+                    time.sleep(3)
+                    for order in orders:
+                        if order['price'] == order['orderQty']:
+                            cancel_order(order)
+                            time.sleep(3)
+                else:
+                    print(p)
+
+        if sell_first_1000 < target_sell_first_1000:
+            print("CANCEL SELL 1000")
+            for p in range(first_sell_1000, target_sell_first_1000, 1000):
+                if fix_mode:
+                    orders = get_orders("Sell", p)
+                    time.sleep(3)
+                    for order in orders:
+                        if order['price'] == order['orderQty']:
+                            cancel_order(order)
+                            time.sleep(3)
+                else:
+                    print(p)
+
+        # PRICE GOING DOWN
+        if target_sell_last_200 < sell_last_200:
+            print("CANCEL SELL 200")
+            for p in range(target_sell_last_200 + 100, sell_last_200 + 100, 100):
+                if fix_mode:
+                    orders = get_orders("Sell", p)
+                    time.sleep(3)
+                    for order in orders:
+                        if order['price'] // 1000 * 200 == order['orderQty']:
+                            cancel_order(order)
+                            time.sleep(3)
+                else:
+                    print(p)
+
+        if target_sell_last_1000 < sell_last_1000:
+            print("CANCEL SELL 1000")
+            for p in range(target_sell_last_1000 + 1000, sell_last_1000 + 1000, 1000):
+                if fix_mode:
+                    orders = get_orders("Sell", p)
+                    time.sleep(3)
+                    for order in orders:
+                        if order['price'] == order['orderQty']:
+                            cancel_order(order)
+                            time.sleep(3)
+                else:
+                    print(p)
+
+        if target_buy_last_1000 < buy_last_1000:
+            print("CANCEL BUY 1000")
+            for p in range(target_buy_last_1000 + 1000, buy_last_1000 + 1000, 1000):
+                if fix_mode:
+                    orders = get_orders("Buy", p)
+                    time.sleep(3)
+                    for order in orders:
+                        if order['price'] == order['orderQty']:
+                            cancel_order(order)
+                            time.sleep(3)
+                else:
+                    print(p)
+
+        #
+        # [RANGE ADD] BUY/SELL
+        #
+
+        # PRICE GOING UP
+        if sell_last_200 < target_sell_last_200:
+            print("ADD SELL 200")
+            for p in range(sell_last_200 + 100, target_sell_last_200 + 100, 100):
+                if fix_mode:
+                    sell(p, (p // 1000) * 200)
+                    time.sleep(3)
+                else:
+                    print(p)
+
+        if sell_last_1000 < target_sell_last_1000:
+            print("ADD SELL 1000")
+            for p in range(sell_last_1000 + 1000, target_sell_last_1000 + 1000, 1000):
+                if fix_mode:
+                    sell(p, (p // 1000) * 1000)
+                    time.sleep(3)
+                else:
+                    print(p)
+
+        if buy_last_1000 < target_buy_last_1000:
+            print("ADD BUY 1000")
+            for p in range(buy_last_1000 + 1000, target_buy_last_1000 + 1000, 1000):
+                if fix_mode:
+                    buy(p, (p // 1000) * 1000)
+                    time.sleep(3)
+                else:
+                    print(p)
+
+        # PRICE GOING DOWN
+        if target_buy_first_200 < buy_first_200:
+            print("ADD BUY 200")
+            for p in range(target_buy_first_200, buy_first_200, 100):
+                if fix_mode:
+                    buy(p, (p // 1000) * 200)
+                    time.sleep(3)
+                else:
+                    print(p)
+
+        if target_buy_first_1000 < buy_first_1000:
+            print("ADD BUY 1000")
+            for p in range(target_buy_first_1000, buy_first_1000, 1000):
+                if fix_mode:
+                    buy(p, (p // 1000) * 1000)
+                    time.sleep(3)
+                else:
+                    print(p)
+        
+        if target_sell_first_1000 < sell_first_1000:
+            print("ADD SELL 1000")
+            for p in range(target_sell_first_1000, sell_first_1000, 1000):
+                if fix_mode:
+                    sell(p, (p // 1000) * 1000)
+                    time.sleep(3)
+                else:
+                    print(p)
+    except:
+        print("\033[91mRANGE: Uncaught Exception!!\033[00m")
+        print('-'*60)
+        traceback.print_exc(file=sys.stdout)
+        print('-'*60)
+
+def fix_gap():
+    try:
         first_p_100 = 0
         first_p_200 = 0
         first_p_1000 = 0
@@ -156,13 +374,13 @@ while True:
         		print("{:>15.0f}".format(first_p_1000))
         		print("BUY 1000 LAST")
         		print("{:>15.0f}".format(prev_p_1000))
-        	if first_p_1000 > 0:
+        	if first_p_200 > 0:
         		print()
         		print("BUY 200 FIRST")
         		print("{:>15.0f}".format(first_p_200))
         		print("BUY 200 LAST")
         		print("{:>15.0f}".format(prev_p_200))
-        	if first_p_1000 > 0:
+        	if first_p_100 > 0:
         		print()
         		print("BUY 100 FIRST")
         		print("{:>15.0f}".format(first_p_100))
@@ -321,8 +539,31 @@ while True:
         traceback.print_exc(file=sys.stdout)
         print('-'*60)
 
+
+stats_laps_in_sec = 1000000000
+while True:
+    try:
+        if stats_laps_in_sec > stats_interval:
+            stats_laps_in_sec = 0
+            now = pytz.utc.localize(datetime.datetime.utcnow())
+            print("")
+            if fix_mode == True:
+                print("\033[93m{:<15s}{:>30s} (UTC)\033[00m".format("[CHECK AND RANGE AND FIX]", now.strftime("%d/%m/%Y %H:%M:%S")))
+            else:
+                print("\033[93m{:<15s}{:>30s} (UTC)\033[00m".format("[CHECK AND RANGE ONLY (NO FIX)]", now.strftime("%d/%m/%Y %H:%M:%S")))
+
+        fix_gap()
+        time.sleep(3)
+        fix_range()
+        time.sleep(3)
+    except:
+        print("\033[91mCHECK AND FIX: Uncaught Exception!!\033[00m")
+        print('-'*60)
+        traceback.print_exc(file=sys.stdout)
+        print('-'*60)
+
     for i in range(1, polling_interval):
         stats_laps_in_sec = stats_laps_in_sec + 1
         time.sleep(1)
         print(".", end =" ", flush=True)
-    print(" ", end =" ", flush=True) 
+    print(" ", end =" ", flush=True)
