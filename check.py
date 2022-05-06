@@ -3,8 +3,8 @@
 import argparse
 from lib import *
 
-polling_interval = 60 * 10
-stats_interval = 60 * 10
+polling_interval = 60 * 1
+stats_interval = 60 * 60
 verbose = False
 
 parser = argparse.ArgumentParser()
@@ -272,7 +272,7 @@ def fix_gap():
                             print("FIXING BUY 100...\033[00m")
                             if order['price'] == prev_p_100:
                                 # tripple beeps
-                                print("\a\a\a") 
+                                #print("\a\a\a") 
                                 result = cancel_order(order)
                                 time.sleep(5)
                                 if type(result) == dict:
@@ -282,7 +282,7 @@ def fix_gap():
                             elif order['price'] > prev_p_100 + 100 and order['price'] % 100 == 0:
                                 for price in range(int(prev_p_100) + 100, int(order['price']) - 1, 100):
                                     # tripple beeps
-                                    print("\a\a\a")
+                                    #print("\a\a\a")
                                     buy(price, price // 1000 * 100)
                                     time.sleep(5)
                             else:
@@ -307,7 +307,7 @@ def fix_gap():
                             print("FIXING BUY 200...\033[00m")
                             if order['price'] == prev_p_200:
                                 # tripple beeps
-                                print("\a\a\a")
+                                #print("\a\a\a")
                                 result = cancel_order(order)
                                 time.sleep(5)
                                 if type(result) == dict:
@@ -317,7 +317,7 @@ def fix_gap():
                             elif order['price'] > prev_p_200 + 100 and order['price'] % 100 == 0:
                                 for price in range(int(prev_p_200) + 100, int(order['price']) - 1, 100):
                                     # tripple beeps
-                                    print("\a\a\a")
+                                    #print("\a\a\a")
                                     buy(price, price // 1000 * 200)
                                     time.sleep(5)
                             else:
@@ -342,7 +342,7 @@ def fix_gap():
                             print("FIXING BUY 1000...\033[00m")
                             if order['price'] == prev_p_1000:
                                 # tripple beeps
-                                print("\a\a\a")
+                                #print("\a\a\a")
                                 result = cancel_order(order)
                                 time.sleep(5)
                                 if type(result) == dict:
@@ -352,7 +352,7 @@ def fix_gap():
                             elif order['price'] > prev_p_1000 + 1000 and order['price'] % 1000 == 0 and order['price'] < prev_p_1000 + 10000:
                                 for price in range(int(prev_p_1000) + 1000, int(order['price']) - 1, 1000):
                                     # tripple beeps
-                                    print("\a\a\a")
+                                    #print("\a\a\a")
                                     buy(price, price)
                                     time.sleep(5)
                             else:
@@ -418,7 +418,7 @@ def fix_gap():
                             print("FIXING SELL 100...\033[00m")
                             if order['price'] == prev_p_100:
                                 # tripple beeps
-                                print("\a\a\a")
+                                #print("\a\a\a")
                                 result = cancel_order(order)
                                 time.sleep(5)
                                 if type(result) == dict:
@@ -428,7 +428,7 @@ def fix_gap():
                             elif order['price'] > prev_p_100 + 100 and order['price'] % 100 == 0:
                                 for price in range(int(prev_p_100) + 100, int(order['price']) - 1, 100):
                                     # tripple beeps
-                                    print("\a\a\a")
+                                    #print("\a\a\a")
                                     sell(price, price // 1000 * 100)
                                     time.sleep(5)
                             else:
@@ -453,7 +453,7 @@ def fix_gap():
                             print("FIXING SELL 200...\033[00m")
                             if order['price'] == prev_p_200:
                                 # tripple beeps
-                                print("\a\a\a")
+                                #print("\a\a\a")
                                 result = cancel_order(order)
                                 time.sleep(5)
                                 if type(result) == dict:
@@ -463,7 +463,7 @@ def fix_gap():
                             elif order['price'] > prev_p_200 + 100 and order['price'] % 100 == 0:
                                 for price in range(int(prev_p_200) + 100, int(order['price']) - 1, 100):
                                     # tripple beeps
-                                    print("\a\a\a")
+                                    #print("\a\a\a")
                                     sell(price, price // 1000 * 200)
                                     time.sleep(5)
                             else:
@@ -488,7 +488,7 @@ def fix_gap():
                             print("FIXING SELL 1000...\033[00m")
                             if order['price'] == prev_p_1000:
                                 # tripple beeps
-                                print("\a\a\a")
+                                #print("\a\a\a")
                                 result = cancel_order(order)
                                 time.sleep(5)
                                 if type(result) == dict:
@@ -498,7 +498,7 @@ def fix_gap():
                             elif order['price'] > prev_p_1000 + 1000 and order['price'] % 1000 == 0 and order['price'] < prev_p_1000 + 10000:
                                 for price in range(int(prev_p_1000) + 1000, int(order['price']) - 1, 1000):
                                     # tripple beeps
-                                    print("\a\a\a")
+                                    #print("\a\a\a")
                                     sell(price, price)
                                     time.sleep(5)
                             else:
@@ -540,22 +540,19 @@ def fix_gap():
         print('-'*60)
 
 
-stats_laps_in_sec = 1000000000
+stats_and_range_laps_in_sec = 1000000000
 while True:
     try:
-        if stats_laps_in_sec > stats_interval:
-            stats_laps_in_sec = 0
+        if stats_and_range_laps_in_sec > stats_interval:
+            stats_and_range_laps_in_sec = 0
             now = pytz.utc.localize(datetime.datetime.utcnow())
             print("")
             if fix_mode == True:
                 print("\033[93m{:<15s}{:>30s} (UTC)\033[00m".format("[CHECK AND RANGE AND FIX]", now.strftime("%d/%m/%Y %H:%M:%S")))
             else:
                 print("\033[93m{:<15s}{:>30s} (UTC)\033[00m".format("[CHECK AND RANGE ONLY (NO FIX)]", now.strftime("%d/%m/%Y %H:%M:%S")))
-
+            fix_range()
         fix_gap()
-        time.sleep(3)
-        fix_range()
-        time.sleep(3)
     except:
         print("\033[91mCHECK AND FIX: Uncaught Exception!!\033[00m")
         print('-'*60)
@@ -563,7 +560,7 @@ while True:
         print('-'*60)
 
     for i in range(1, polling_interval):
-        stats_laps_in_sec = stats_laps_in_sec + 1
+        stats_and_range_laps_in_sec = stats_and_range_laps_in_sec + 1
         time.sleep(1)
         print(".", end =" ", flush=True)
     print(" ", end =" ", flush=True)
