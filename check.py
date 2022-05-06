@@ -37,7 +37,7 @@ def fix_range():
             raise ValueError("Liq Price < Ticker Price")
 
         print("")
-        print("\033[93m{:<40s}{:>40.0f}\033[00m".format("[LIQ PRICE FOR RANGE BUY LOWER BOUND]\033[00m", liq_price)),
+        print("\033[93m{:<30s}{:>30.0f}\033[00m\033[00m".format("[LIQ PRICE FOR RANGE]", liq_price))
         print("", flush=True)
 
         #
@@ -580,9 +580,9 @@ while True:
             now = pytz.utc.localize(datetime.datetime.utcnow())
             print("")
             if fix_mode == True:
-                print("\033[93m{:<40s}{:>40s} (UTC)\033[00m".format("[CHECK AND RANGE AND FIX]", now.strftime("%d/%m/%Y %H:%M:%S")))
+                print("\033[93m{:<30s}{:>30s} (UTC)\033[00m".format("[CHECK AND RANGE AND FIX]", now.strftime("%d/%m/%Y %H:%M:%S")))
             else:
-                print("\033[93m{:<40s}{:>40s} (UTC)\033[00m".format("[CHECK AND RANGE ONLY (NO FIX)]", now.strftime("%d/%m/%Y %H:%M:%S")))
+                print("\033[93m{:<30s}{:>30s} (UTC)\033[00m".format("[CHECK AND RANGE ONLY (NO FIX)]", now.strftime("%d/%m/%Y %H:%M:%S")))
             print("", end ="", flush=True)
             fix_gap()
             fix_range()
