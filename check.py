@@ -127,7 +127,7 @@ def fix_range():
 
         if sell_first_1000 < target_sell_first_1000:
             print("CANCEL SELL 1000")
-            for p in range(first_sell_1000, target_sell_first_1000, 1000):
+            for p in range(sell_first_1000, target_sell_first_1000, 1000):
                 if fix_mode:
                     orders = get_orders("Sell", p)
                     time.sleep(3)
