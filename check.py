@@ -6,6 +6,8 @@ from lib import *
 polling_interval = 60 * 1
 stats_interval = 60 * 30
 verbose = False
+wall_200 = 8000
+wall_1000 = 8000
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--fix", help="add missing and cancel duplicate orders", action="store_true")
@@ -35,14 +37,14 @@ def fix_range():
         # [RANGE] GET TARGET/CURRENT BUY
         # 
 
-        target_buy_first_200 = int(ticker) // 100 * 100 - 8000
+        target_buy_first_200 = int(ticker) // 100 * 100 - wall_200
         if is_long and target_buy_first_200 < liq_price:
             print("\033[32mTarget First Buy 200 ({:.0f}) is less than Liq Price ({:.0f}). Use Liq Price".format(target_buy_first_200, liq_price)) 
             target_buy_first_200 = liq_price
         target_buy_last_1000 = target_buy_first_200 // 1000 * 1000
         if target_buy_last_1000 >= target_buy_first_200:
             target_buy_last_1000 = target_buy_last_1000 - 1000
-        target_buy_first_1000 = target_buy_last_1000 - 8000
+        target_buy_first_1000 = target_buy_last_1000 - wall_1000
         if is_long and target_buy_first_1000 < liq_price:
             print("\033[32mTarget First Buy 1000 ({:.0f}) is less than Liq Price ({:.0f}). Use Liq Price".format(target_buy_first_1000, liq_price))
             target_buy_first_1000 = liq_price
@@ -81,12 +83,12 @@ def fix_range():
         # [RANGE] GET TARGET/CURRENT SELL
         #
 
-        target_sell_last_200 = int(ticker) // 100 * 100 + 8000
+        target_sell_last_200 = int(ticker) // 100 * 100 + wall_200
         if (not is_long) and liq_price < target_sell_last_200:
             print("\033[35mTarget Last Sell 200 ({:.0f}) is greater than Liq Price ({:.0f}). Use Liq Price".format(target_sell_last_200, liq_price))
             target_sell_last_200 = liq_price 
         target_sell_first_1000 = target_sell_last_200 // 1000 * 1000 + 1000
-        target_sell_last_1000 = target_sell_first_1000 + 8000
+        target_sell_last_1000 = target_sell_first_1000 + wall_1000
         if (not is_long) and liq_price < target_sell_last_1000:
             print("\033[35mTarget Last Sell 1000 ({:.0f}) is greater than Liq Price ({:.0f}). Use Liq Price".format(target_sell_last_1000, liq_price))
             target_sell_last_1000 = liq_price
