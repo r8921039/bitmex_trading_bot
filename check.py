@@ -4,7 +4,7 @@ import argparse
 from lib import *
 
 polling_interval = 60 * 1
-stats_interval = 60 * 60
+stats_interval = 60 * 30
 verbose = False
 
 parser = argparse.ArgumentParser()
@@ -18,16 +18,34 @@ else:
 def fix_range():
     try:
         ticker = get_ticker()
+        pos = get_pos()
+        liq_price = 0
+        is_long = True
+        if pos != None:
+            liq_price = int(pos['liquidationPrice']) // 1000 * 1000
+            if pos['currentQty'] >= 0:
+                liq_price = liq_price + 1000 
+            else:
+                is_long = False
+        print("")
+        print("\033[93m{:<30s}{:>30s}\033[00m".format("[LIQ PRICE FOR RANGE BUY LOWER BOUND]", liq_price)),
+        print("", flush=True)
 
         #
         # [RANGE] GET TARGET/CURRENT BUY
         # 
 
         target_buy_first_200 = int(ticker) // 100 * 100 - 8000
+        if is_long and target_buy_first_200 < liq_price:
+            print("\033[93mTarget First Buy 200 is less than Liq Price. Use Liq Price as First Buy 200") 
+            target_buy_first_200 = liq_price
         target_buy_last_1000 = target_buy_first_200 // 1000 * 1000
         if target_buy_last_1000 >= target_buy_first_200:
             target_buy_last_1000 = target_buy_last_1000 - 1000
-        target_buy_first_1000 = target_buy_last_1000 - 15000
+        target_buy_first_1000 = target_buy_last_1000 - 8000
+        if is_long and target_buy_first_1000 < liq_price:
+            print("\033[93mTarget First Buy 1000 is less than Liq Price. Use Liq Price as First Buy 1000") 
+            target_buy_first_1000 = liq_pirce
         if target_buy_first_1000 < 1000:
             print("\033[93mFirst RANGE BUY less than 1000!")
             target_buy_first_1000 = 1000
@@ -64,9 +82,14 @@ def fix_range():
         #
 
         target_sell_last_200 = int(ticker) // 100 * 100 + 8000
+        if (not is_long) and liq_price < target_sell_last_200:
+            print("\033[93mTarget Last Sell 200 is greater than Liq Price. Use Liq Price as Last Sell 200")
+            target_sell_last_200 = liq_price 
         target_sell_first_1000 = target_sell_last_200 // 1000 * 1000 + 1000
-        target_sell_last_1000 = target_sell_first_1000 + 15000
-
+        target_sell_last_1000 = target_sell_first_1000 + 8000
+        if (not is_long) and liq_price < target_sell_last_1000:
+            print("\033[93mTarget Last Sell 1000 is greater than Liq Price. Use Liq Price as Last Sell 1000")
+            target_sell_last_1000 = liq_price
         sell_first_200 = 0
         sell_first_1000 = 0
         sell_last_200 = 0
@@ -551,8 +574,11 @@ while True:
                 print("\033[93m{:<15s}{:>30s} (UTC)\033[00m".format("[CHECK AND RANGE AND FIX]", now.strftime("%d/%m/%Y %H:%M:%S")))
             else:
                 print("\033[93m{:<15s}{:>30s} (UTC)\033[00m".format("[CHECK AND RANGE ONLY (NO FIX)]", now.strftime("%d/%m/%Y %H:%M:%S")))
+            print("", end =" ", flush=True)
+            fix_gap()
             fix_range()
-        fix_gap()
+        else:
+            fix_gap()
     except:
         print("\033[91mCHECK AND FIX: Uncaught Exception!!\033[00m")
         print('-'*60)

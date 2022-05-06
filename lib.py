@@ -51,6 +51,15 @@ def ticker(log = False):
 #
 # position
 #
+def get_pos()
+    try:
+        result = client.Position.Position_get(filter=json.dumps({'symbol': symbol})).result()[0][0]
+    except:
+        print("\033[91mUnexpected Error!!\033[00m")
+        print('-'*60)
+        traceback.print_exc(file=sys.stdout)
+        print('-'*60)
+        return TypeError
 
 def show_pos():
     try: 
