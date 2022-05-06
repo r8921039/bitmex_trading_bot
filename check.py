@@ -4,7 +4,7 @@ import argparse
 from lib import *
 
 polling_interval = 60 * 10
-stats_interval = 60 * 30
+stats_interval = 60 * 10
 verbose = False
 
 parser = argparse.ArgumentParser()
