@@ -29,8 +29,15 @@ def fix_range():
                 liq_price = liq_price + 1000 
             else:
                 is_long = False
+        if is_long and liq_price > ticker:
+            print("\033[91mERROR! Long pos has Liq Price (:.0f) > Ticker Price {:.0f}\033[00m".format(liq_price, ticker))
+            raise ValueError("Liq Price > Ticker Price")
+        elif (not is_long) and liq_price < ticker:
+            print("\033[91mERROR! Short pos has Liq Price (:.0f) < Ticker Price {:.0f}\033[00m".format(liq_price, ticker))
+            raise ValueError("Liq Price < Ticker Price")
+
         print("")
-        print("\033[93m{:<40s}{:>40.0f}\033[00m".format("[LIQ PRICE FOR RANGE BUY LOWER BOUND]", liq_price)),
+        print("\033[93m{:<40s}{:>40.0f}\033[00m".format("[LIQ PRICE FOR RANGE BUY LOWER BOUND]\033[00m", liq_price)),
         print("", flush=True)
 
         #
@@ -38,18 +45,18 @@ def fix_range():
         # 
 
         target_buy_first_200 = int(ticker) // 100 * 100 - wall_200
-        if is_long and target_buy_first_200 < liq_price:
-            print("\033[32mTarget First Buy 200 ({:.0f}) is less than Liq Price ({:.0f}). Use Liq Price".format(target_buy_first_200, liq_price)) 
+        if pos and is_long and target_buy_first_200 < liq_price:
+            print("\033[91mTarget First Buy 200 ({:.0f}) < Liq Price ({:.0f}). Use Liq Price\033[00m".format(target_buy_first_200, liq_price)) 
             target_buy_first_200 = liq_price
         target_buy_last_1000 = target_buy_first_200 // 1000 * 1000
         if target_buy_last_1000 >= target_buy_first_200:
             target_buy_last_1000 = target_buy_last_1000 - 1000
         target_buy_first_1000 = target_buy_last_1000 - wall_1000
-        if is_long and target_buy_first_1000 < liq_price:
-            print("\033[32mTarget First Buy 1000 ({:.0f}) is less than Liq Price ({:.0f}). Use Liq Price".format(target_buy_first_1000, liq_price))
+        if pos and is_long and target_buy_first_1000 < liq_price:
+            print("\033[91mTarget First Buy 1000 ({:.0f}) < Liq Price ({:.0f}). Use Liq Price\033[00m".format(target_buy_first_1000, liq_price))
             target_buy_first_1000 = liq_price
         if target_buy_first_1000 < 1000:
-            print("\033[91mFirst RANGE BUY less than 1000!")
+            print("\033[91mFirst RANGE BUY less than 1000!\033[00m")
             target_buy_first_1000 = 1000
 
         buy_first_200 = 0
@@ -84,13 +91,13 @@ def fix_range():
         #
 
         target_sell_last_200 = int(ticker) // 100 * 100 + wall_200
-        if (not is_long) and liq_price < target_sell_last_200:
-            print("\033[35mTarget Last Sell 200 ({:.0f}) is greater than Liq Price ({:.0f}). Use Liq Price".format(target_sell_last_200, liq_price))
+        if pos and (not is_long) and liq_price < target_sell_last_200:
+            print("\033[91mTarget Last Sell 200 ({:.0f}) > Liq Price ({:.0f}). Use Liq Price\033[00m".format(target_sell_last_200, liq_price))
             target_sell_last_200 = liq_price 
         target_sell_first_1000 = target_sell_last_200 // 1000 * 1000 + 1000
         target_sell_last_1000 = target_sell_first_1000 + wall_1000
-        if (not is_long) and liq_price < target_sell_last_1000:
-            print("\033[35mTarget Last Sell 1000 ({:.0f}) is greater than Liq Price ({:.0f}). Use Liq Price".format(target_sell_last_1000, liq_price))
+        if pos and (not is_long) and liq_price < target_sell_last_1000:
+            print("\033[91mTarget Last Sell 1000 ({:.0f}) > Liq Price ({:.0f}). Use Liq Price\033[00m".format(target_sell_last_1000, liq_price))
             target_sell_last_1000 = liq_price
         sell_first_200 = 0
         sell_first_1000 = 0
@@ -576,7 +583,7 @@ while True:
                 print("\033[93m{:<40s}{:>40s} (UTC)\033[00m".format("[CHECK AND RANGE AND FIX]", now.strftime("%d/%m/%Y %H:%M:%S")))
             else:
                 print("\033[93m{:<40s}{:>40s} (UTC)\033[00m".format("[CHECK AND RANGE ONLY (NO FIX)]", now.strftime("%d/%m/%Y %H:%M:%S")))
-            print("", end =" ", flush=True)
+            print("", end ="", flush=True)
             fix_gap()
             fix_range()
         else:
