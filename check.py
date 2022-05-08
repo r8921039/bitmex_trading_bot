@@ -138,7 +138,7 @@ def fix_range():
                     orders = get_orders("Buy", p)
                     time.sleep(3)
                     for order in orders:
-                        if order['price'] // 1000 * 200 == order['orderQty']:
+                        if order['price'] // 1000 * 200 == order['orderQty'] or order['price'] // 1000 * 200 == (order['orderQty'] - 200):
                             cancel_order(order)
                             time.sleep(3)
                 else:
@@ -178,7 +178,7 @@ def fix_range():
                     orders = get_orders("Sell", p)
                     time.sleep(3)
                     for order in orders:
-                        if order['price'] // 1000 * 200 == order['orderQty']:
+                        if order['price'] // 1000 * 200 == order['orderQty'] or order['price'] // 1000 * 200 == (order['orderQty'] + 200):
                             cancel_order(order)
                             time.sleep(3)
                 else:
