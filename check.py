@@ -131,8 +131,9 @@ def fix_range():
         #
 
         # PRICE GOING UP
-        if buy_first_200 < target_buy_first_200:
-            #print("CANCEL BUY 200")
+        if buy_first_200 < target_buy_first_200 and (not (buy_first_200 == 0 and buy_last_200 == 0)):
+            if verbose:
+                print("CANCEL BUY 200:{:.0f}..{:.0f}".format(buy_first_200, target_buy_first_200))
             for p in range(buy_first_200, target_buy_first_200, 100):
                 if fix_mode:
                     orders = get_orders("Buy", p)
@@ -144,8 +145,9 @@ def fix_range():
                 else:
                     print(p)
 
-        if buy_first_1000 < target_buy_first_1000:
-            #print("CANCEL BUY 1000")
+        if buy_first_1000 < target_buy_first_1000 and (not (buy_first_1000 == 0 and buy_last_1000 == 0)):
+            if verbose:
+                print("CANCEL BUY 1000:{:.0f}..{:.0f}".format(buy_first_1000, target_buy_first_1000))
             for p in range(buy_first_1000, target_buy_first_1000, 1000):
                 if fix_mode:
                     orders = get_orders("Buy", p)
@@ -157,8 +159,9 @@ def fix_range():
                 else:
                     print(p)
 
-        if sell_first_1000 < target_sell_first_1000:
-            #print("CANCEL SELL 1000")
+        if sell_first_1000 < target_sell_first_1000 and (not (sell_first_1000 == 0 and sell_last_1000 == 0)):
+            if verbose:
+                print("CANCEL SELL 1000:{:.0f}..{:.0f}".format(sell_first_1000, target_sell_first_1000))
             for p in range(sell_first_1000, target_sell_first_1000, 1000):
                 if fix_mode:
                     orders = get_orders("Sell", p)
@@ -171,8 +174,9 @@ def fix_range():
                     print(p)
 
         # PRICE GOING DOWN
-        if target_sell_last_200 < sell_last_200:
-            #print("CANCEL SELL 200")
+        if target_sell_last_200 < sell_last_200 and (not (target_sell_last_200 == 0 and sell_last_200 == 0)):
+            if verbose:
+                print("CANCEL SELL 200:{:.0f}..{:.0f}".format(target_sell_last_200 + 100, sell_last_200 + 100))
             for p in range(target_sell_last_200 + 100, sell_last_200 + 100, 100):
                 if fix_mode:
                     orders = get_orders("Sell", p)
@@ -184,8 +188,9 @@ def fix_range():
                 else:
                     print(p)
 
-        if target_sell_last_1000 < sell_last_1000:
-            #print("CANCEL SELL 1000")
+        if target_sell_last_1000 < sell_last_1000 and (not (target_sell_last_1000 == 0 and sell_last_1000 == 0)):
+            if verbose:
+                print("CANCEL SELL 1000:{:.0f}..{:.0f}".format(target_sell_last_1000 + 1000, sell_last_1000 + 1000))
             for p in range(target_sell_last_1000 + 1000, sell_last_1000 + 1000, 1000):
                 if fix_mode:
                     orders = get_orders("Sell", p)
@@ -197,8 +202,9 @@ def fix_range():
                 else:
                     print(p)
 
-        if target_buy_last_1000 < buy_last_1000:
-            #print("CANCEL BUY 1000")
+        if target_buy_last_1000 < buy_last_1000 and (not (target_buy_last_1000 == 0 and buy_last_1000 == 0)):
+            if verbose:
+                print("CANCEL BUY 1000:{:.0f}..{:.0f}".format(target_buy_last_1000 + 1000, buy_last_1000 + 1000))
             for p in range(target_buy_last_1000 + 1000, buy_last_1000 + 1000, 1000):
                 if fix_mode:
                     orders = get_orders("Buy", p)
@@ -216,7 +222,8 @@ def fix_range():
 
         # PRICE GOING UP
         if sell_last_200 < target_sell_last_200:
-            #print("ADD SELL 200")
+            if verbose:
+                print("ADD SELL 200:{:.0f}..{:.0f}".format(sell_last_200 + 100, target_sell_last_200 + 100))
             for p in range(sell_last_200 + 100, target_sell_last_200 + 100, 100):
                 if fix_mode:
                     sell(p, (p // 1000) * 200)
@@ -225,7 +232,8 @@ def fix_range():
                     print(p)
 
         if sell_last_1000 < target_sell_last_1000:
-            #print("ADD SELL 1000")
+            if verbose:
+                print("ADD SELL 1000:{:.0f}..{:.0f}".format(sell_last_1000 + 1000, target_sell_last_1000 + 1000))
             for p in range(sell_last_1000 + 1000, target_sell_last_1000 + 1000, 1000):
                 if fix_mode:
                     sell(p, (p // 1000) * 1000)
@@ -233,8 +241,11 @@ def fix_range():
                 else:
                     print(p)
 
-        if buy_last_1000 < target_buy_last_1000:
-            #print("ADD BUY 1000")
+        if buy_last_1000 < target_buy_last_1000 and target_buy_first_1000 < target_buy_last_1000:
+            if buy_last_1000 < target_buy_first_1000:
+                buy_last_1000 = target_buy_first_1000 - 1000 
+            if verbose:
+                print("ADD BUY 1000:{:.0f}..{:.0f}".format(buy_last_1000 + 1000, target_buy_last_1000 + 1000))
             for p in range(buy_last_1000 + 1000, target_buy_last_1000 + 1000, 1000):
                 if fix_mode:
                     buy(p, (p // 1000) * 1000)
@@ -244,7 +255,8 @@ def fix_range():
 
         # PRICE GOING DOWN
         if target_buy_first_200 < buy_first_200:
-            #print("ADD BUY 200")
+            if verbose:
+                print("ADD BUY 200:{:.0f}..{:.0f}".format(target_buy_first_200, buy_first_200))
             for p in range(target_buy_first_200, buy_first_200, 100):
                 if fix_mode:
                     buy(p, (p // 1000) * 200)
@@ -253,7 +265,8 @@ def fix_range():
                     print(p)
 
         if target_buy_first_1000 < buy_first_1000:
-            #print("ADD BUY 1000")
+            if verbose:
+                print("ADD BUY 1000:{:.0f}..{:.0f}".format(target_buy_first_1000, buy_first_1000))
             for p in range(target_buy_first_1000, buy_first_1000, 1000):
                 if fix_mode:
                     buy(p, (p // 1000) * 1000)
@@ -262,7 +275,8 @@ def fix_range():
                     print(p)
         
         if target_sell_first_1000 < sell_first_1000:
-            #print("ADD SELL 1000")
+            if verbose:
+                print("ADD SELL 1000:{:.0f}..{:.0f}".format(target_sell_first_1000, sell_first_1000))
             for p in range(target_sell_first_1000, sell_first_1000, 1000):
                 if fix_mode:
                     sell(p, (p // 1000) * 1000)

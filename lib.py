@@ -106,7 +106,14 @@ def place_order(price, orderQty):
     try:
         if orderQty == None:
             orderQty = int(price)
+
+        if verbose:
+            print("\033[93m[DEBUG] PLACING NEW ORDER:\033[00m")
+            print("\033[93m{:>15s}{:>15s}{:>15s}\033[00m".format("SIDE", "PRICE", "QTY"))
+            print("\033[93m{:>15s}{:>15.2f}{:>15.0f}\033[00m".format("", price, orderQty));
+
         result = client.Order.Order_new(symbol=symbol, ordType="Limit", orderQty=orderQty, price=price).result()[0]
+
         if result['side'] == 'Sell': 
             print("\033[35m", end="")
         else:
