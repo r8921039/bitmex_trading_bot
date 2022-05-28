@@ -26,7 +26,7 @@ def fix_range():
         if pos != None:
             liq_price = int(pos['liquidationPrice']) // 1000 * 1000
             if pos['currentQty'] >= 0:
-                liq_price = liq_price + 1000 
+                liq_price = liq_price + 2000 
             else:
                 is_long = False
         if is_long and liq_price > ticker:
