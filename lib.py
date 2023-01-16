@@ -66,9 +66,9 @@ def show_pos():
     try: 
         result = client.Position.Position_get(filter=json.dumps({'symbol': symbol})).result()[0][0]
         qty = result['currentQty'] 
-        value = result['currentQty'] / Decimal(result['lastPrice'])
+        value = result['currentQty'] / Decimal(result['markPrice'])
         cost_base = Decimal(result['breakEvenPrice'])
-        curr_price = Decimal(result['lastPrice'])
+        curr_price = Decimal(result['markPrice'])
         liq_price = Decimal(result['liquidationPrice'])
         liq_pct = Decimal(result['deleveragePercentile'])
         u_pnl = Decimal(result['unrealisedPnl']) / 100000000
