@@ -3,6 +3,13 @@
 import argparse
 from lib import *
 
+### WARNING! There is a bug in bootstrapping check.py. It can't start with empty orders as it will use 0 to start populate sell orders <- bug
+### To work around the bug: 
+### 1) Run ./check.py without -f (fix mode) and get target buy/sell x00/1000 first/last orders
+### 2) Manually enter those boundary orders 
+### 3) Run ./check.py -f (fix mode and turn on verbose). Better monitor the population of all orders and stop the program if bug shows up.   
+### 4) Clear .last_buy_sell file before restarting bot.py if running into the bug otherwise it will re-execute wrongly executed orders
+
 polling_interval = 60 * 1
 stats_interval = 60 * 30
 verbose = True
