@@ -12,7 +12,7 @@ from lib import *
 
 polling_interval = 60 * 1
 stats_interval = 60 * 30
-verbose = True
+verbose = False
 wall_x00 = 8000
 wall_1000 = 8000
 

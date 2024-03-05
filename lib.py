@@ -136,13 +136,13 @@ def get_all_sell_orders(log = True, price_reverse = True):
 def get_orders(side, price = None, log = True, price_reverse = True): # price = None: for all orders 
     try: 
         if price == None: 
-            orders = client.Order.Order_getOrders(symbol=symbol, reverse=False, count=200, columns='side,price,orderQty,timestamp,orderID', filter=json.dumps({'open' : 'true', 'side' : side})).result()[0]
+            orders = client.Order.Order_getOrders(symbol=symbol, reverse=False, count=200, columns='side,price,orderQty,timestamp,orderID', filter=json.dumps({'open' : True, 'side' : side})).result()[0]
             if side == "Buy":
                 orders = sorted(orders, key = lambda i: i['price'], reverse=price_reverse)
             else:
                 orders = sorted(orders, key = lambda i: i['price'], reverse=price_reverse)
         else: 
-            orders = client.Order.Order_getOrders(symbol=symbol, reverse=False, filter=json.dumps({'open' : 'true', 'side' : side, 'price' : price})).result()[0]
+            orders = client.Order.Order_getOrders(symbol=symbol, reverse=False, filter=json.dumps({'open' : True, 'side' : side, 'price' : price})).result()[0]
 
         #if len(orders) > 0:
         #    if log == True:
